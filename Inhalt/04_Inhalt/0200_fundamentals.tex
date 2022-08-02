@@ -34,7 +34,7 @@ In this approach, a command represents a certain action that the \ac{cli} can pe
 This action than take arguments and flags to further specify on which objects and in which way the command should take action.
 With Cobra, one can also easily create nested subcommands.
 This means that a before mentioned command can also be divided into multiple sub-actions to enable detailed handling of complex actions.
-Further benefits of Cobra are for example the automated generation of autocomplete for the most common shells as well as the aibility to automatically create man pages. \cite{cobra.github, cobra.dev}
+Further, benefits of Cobra are, among others, the automated generation of autocomplete for the most common shells as well as the ability to automatically create man pages. \cite{cobra.github, cobra.dev}
 
 
 % \begin{itemize}
@@ -52,7 +52,25 @@ Further benefits of Cobra are for example the automated generation of autocomple
 \section{Hyperscalers}
 \subsection{AWS}
 
+\section{Gardener}
+
+\section{Jenkins}
+
 \section{Kubernetes}
+Kubernetes (often short: k8s) is an open source solution to ease up and automate management of container based services.
+While doing so\todo{this sounds ugly}, it follows a declarative paradigm.
+This means that the users just needs to describe the desired state -- for example through the use of configuration files or via the Kubernetes \ac{cli} -- and Kubernetes determines the steps by itself which are necessary to reach and maintain this state.
+Kubernetes also enables users to dynamically scale their applications and services.
+This means that the amount of resources, that are dedicated to an application, is adapted during runtime dependent, for example, on the current number of users.
+Furthermore, Kubernetes can perform load balancing and redundancy between different instances of the same service.
+\cite{Bloß2019, wasistk8s}
+
+One instance of a Kubernetes system is called a cluster.
+A Cluster is composed of multiple nodes (which usually are virtual machines or physical servers) which run the actual applications.
+The interaction with a cluster is managed by the so-called \emph{Kubernetes Master}.
+It is a central controlling unit.
+The user actually never interacts with the nodes themselves directly.
+\cite{k8skonzepte}
 
 \section{Vault}
 
