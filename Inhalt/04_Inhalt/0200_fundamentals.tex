@@ -7,6 +7,13 @@ Through its structure go supports programming on various levels of abstraction.
 For instance, one can embed Assembler or C code into a Go program or on the other hand combine groups of components into bigger, more complex components to realize abstract design patterns. \cite{Maurer2021}
 Nowadays, Go is a popular choice for everything related to DevOps and therefor also for the development of command line tools. \cite{mike.2020}
 
+\begin{itemize}
+    \item toolchain (uniform formatter, included test suite, source code based generation of documentation)
+    \item third party modules repo / go get
+    \item extensive standard library
+    \item (cite from golang.org tutorial)
+\end{itemize}
+
 % started in 2007 released in 2009
 % open source, compiled, and statically typed programming language (https://www.freecodecamp.org/news/what-is-go-programming-language/)
 % face engineering challenges at Google (https://go.dev/solutions/google/)
@@ -18,6 +25,27 @@ Nowadays, Go is a popular choice for everything related to DevOps and therefor a
 %     suitable for realizing abstract design patterns
 
 \section{Cobra}
+Cobra is an open source library for Go.
+Its aim is to provide developers with an easy way to create modern \ac{cli} applications.
+The cobra library is being used by noticeable projects like the \ac{cli}s for Kubernetes or for GitHub.
+The idea behind Cobra's intended command schema is that commands of a well constructed \ac{cli} should read like sentences.
+This way, new users that are familiar with \acp{cli} in general quickly feel native because interacting with the \ac{cli} feels more natural.
+In this approach, a command represents a certain action that the \ac{cli} can perform.
+This action than take arguments and flags to further specify on which objects and in which way the command should take action.
+With Cobra, one can also easily create nested subcommands.
+This means that a before mentioned command can also be divided into multiple sub-actions to enable detailed handling of complex actions.
+Further benefits of Cobra are for example the automated generation of autocomplete for the most common shells as well as the aibility to automatically create man pages. \cite{cobra.github, cobra.dev}
+
+
+% \begin{itemize}
+% 	\item open source library
+%     \item modern cli applications
+%     \item "namenhafte" projects like Kubernetes, GitHub CLI
+%     \item subcommand-based -> explain
+%     \item nested subcommands
+%     \item can automatically generate autocomplete
+%     \item helps in generating man pages \cite{cobra.github}
+% \end{itemize}
 
 \section{Terraform}
 
