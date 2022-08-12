@@ -7,12 +7,19 @@ Through its structure go supports programming on various levels of abstraction.
 For instance, one can embed Assembler or C code into a Go program or on the other hand combine groups of components into bigger, more complex components to realize abstract design patterns. \cite{Maurer2021}
 Nowadays, Go is a popular choice for everything related to DevOps and therefor also for the development of command line tools. \cite{mike.2020}
 
-\begin{itemize}
-    \item toolchain (uniform formatter, included test suite, source code based generation of documentation)
-    \item third party modules repo / go get
-    \item extensive standard library
-    \item (cite from golang.org tutorial)
-\end{itemize}
+Go also tries to provide its own, official solutions for common tasks in software development.
+When installing Go, it comes packed alongside with a formatter (which shall ensure uniform styling across all programs written in Go) and an included suite for unit testing, just to name a few examples.
+Furthermore, Go supports generating documentation based on comments in the source code; much alike JavaDoc.
+Go features an extensive standard library which depicts a good starting point for developing your own applications.
+In case one wants to include a third party library, this can be done via the \emph{go get} command.
+It fetches the necessary resources (usually directly from a \ac{vcs}) and saves the modules as a dependency in the \emph{go.mod} file. (cite go tour and go docs)
+
+% \begin{itemize}
+%     \item toolchain (uniform formatter, included test suite, source code based generation of documentation)
+%     \item third party modules repo / go get
+%     \item extensive standard library
+%     \item (cite from golang.org tutorial)
+% \end{itemize}
 
 % started in 2007 released in 2009
 % open source, compiled, and statically typed programming language (https://www.freecodecamp.org/news/what-is-go-programming-language/)
@@ -73,5 +80,68 @@ The user actually never interacts with the nodes themselves directly.
 \cite{k8skonzepte}
 
 \section{Vault}
+Vault is a service with the primary task to provide a central control unit to manage and organize enterprise secrets.
+It encrypts secrets both at rest and in transit.
+Access to the secrets can be granted granular per user through the use of \acp{acl}.
+Furthermore, vault audits access to the secrets.
+That means that it keeps a detailed log on whom accessed what secret at which point in time.
+If there was a security breach, where an unauthorized person got access to vault, this protocol can be used to tell, if a specific secret has been read by the attacker or if it is still safe to use.
+
+Vault is designed to be highly pluggable.
+An instance is composed of \emph{storage backends}, \emph{audit log instances}, \emph{authentication providers} as well as \emph{secret backends}.
+Each of these can be impersonated by a variety of different components.
+This makes it possible to use different trusted authorities for attestation of identity.
+For example, among others LDAP, JWT, GitHub, and Radius can be used.
+An automated build service could very well use a different service to authenticate to vault than a human user.
+
+Secrets and encryption are often the weak spot in applications.
+If a secret gets leaked and the leak stays unnoticed, attackers could gain long term access to a system.
+As a solution, Vault offers \emph{dynamic secrets}.
+When a client requests the access credentials for a supported system, Vault creates a short-lived secret just for that specific client.
+Because the client is only accessing vault, it does not have to bother with key creation nor rotation and an increased layer of security is added by not using secrets for an extended period of time.
+Also, if a dynamic secret gets leaked, this single secret can be revoked individually.
+If all clients accessing the resource used the same credentials, changing or blocking those could potentially cause an outage of the whole system.
+
+When it comes to encryption, it can happen rather quickly that a single mistake compromises the security of the whole application.
+Because of this, vault offers encryption as a service.
+The idea is, that vault concentrates on the single task to handle credentials and encryption safely.
+The broad variety of applications have a different focus and are not developed with the necessary expertise to guarantee safe implementation of security measures.
+Vault, on the other hand, uses implementations that are audited by the open source community as well as independent experts.
+Those are then provided as a high level \ac{api} to application developers.
+That way, the encryption process of data gets very easy while, at the same time, vault can handle the used encryption keys directly, and they are never actually sent to the application itself.
+
+% \begin{itemize}
+%     \item manage and organize secrets
+%     \item provide a central secret storage
+%     \item encrypt secrets at rest and in transit
+%     \item ACL
+%     \item Audit; log who has access what and when
+%     \item a secret is a set of different credentials
+%     \item protect sensitive data
+%     \item various authentication methods; like LDAP, JWT, GitHub, Radius
+%     \item authenticate against trusted sources of identity
+%     \item trusted authority for attestation of identity
+%     \item automate key issuance and rotation
+    
+%     \item dynamic secrets
+%     \item create secrets for each specific client with limited lifetime
+%     \item revoke a specific secret targeted
+    
+%     \item encrypt as a service
+%     \item named key
+%     \item high level API to do cryptography (encrypt, sign, verify, ...)
+%     \item key and encryption logic never actually gets to the developer
+%     \item control key lifecycle safely
+%     \item protect application data at rest
+    
+%     \item highly pluggable
+%     \item storage backends
+%     \item Audit log instances
+%     \item auth
+%     \item secret backends (key/value, DB plugins, AWS, ...)
+%     \item all of these are modular and can use solutions of various providers
+    
+%     \item cite https://www.vaultproject.io/
+% \end{itemize}
 
 \section{Bootstrap}
