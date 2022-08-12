@@ -55,6 +55,56 @@ Further, benefits of Cobra are, among others, the automated generation of autoco
 % \end{itemize}
 
 \section{Terraform}
+Modern enterprise infrastructure for software development usually makes use of cloud computing to dynamically adapt infrastructure to the fast-paced world of agile development.
+These clusters are usually distributed between multiple cloud services, each of which use their own individual \acp{api} to configure their platform.
+Terraform is a tool that tries to minimize the effort needed to deploy these infrastructures in the long run by automating resource management as far as possible.
+It allows to uniformly describe the target infrastructure in an easy to learn, machine-readable definition language and automatically takes care of deploying this infrastructure at the individual \ac{iaas} providers.
+This approach is also known as \ac{iac}.
+With Terraform, it is also possible to save provisioned infrastructure setups as a Terraform configuration to reuse them at a later point in time or to arbitrarily extend and adapt the configuration.
+For configuration, either \ac{json} or \ac{hcl} can be used, with \ac{hcl} being the preferred way by the developing company HashiCorp because of its advanced features compared to \ac{json}.
+Terraform can only unleash its full potential because of cooperations with all major software and hardware vendors and providers.
+HashiCorp partners with over 160 companies and services the most noticeable ones being:
+\begin{itemize}
+    \item \ac{aws},
+    \item Atlassian,
+    \item Cloudflare,
+    \item Google,
+    \item Microsoft, and
+    \item Oracle.
+\end{itemize}
+
+The most common use cases for Terraform include general \ac{iac}, managing Kubernetes (\autoref{sec:kubernetes}), multi-cloud deployment, management of network infrastructures, and management of virtual machine images.
+Terraform additionally integrates tightly with other HashiCorp services like Vault (\autoref{sec:vault}).
+
+% \begin{itemize}
+%     \item codifies cloud apis into declarative configuration files
+    
+%     \item minimiert langfristig den für das Deploment benötigten Aufwand
+%     \item um den modernen Ansprüchen der Schnelllebigkeit gerecht werden zu können, müssen IT-Administratoren Ressourcenmanagement weitmöglichst automatisieren
+%     \item Kluster mit maschienenlesbaren Konfigurationscode beschreiben -> Infrastructure as Code
+%     \item Terraform ermöglicht einheitliche Beschreibung von Zielinfrastruktur und sorgt für Umsetzung bei IaaS-Providern
+%     \item erlaubt es, provisionierte Infrastruktur-Setups zu speichern, um diese zu einem späteren Zeitpunkt erneut nutzen oder beliebig erweitern/anpassen zu können
+%     \item 160 Partner, sind unter anderem AWS, Atlassian, Cloudflare, Google, Microsoft und Oracle
+    
+%     \item üblicherweise wird auf verschiedene Cloud-Services zurückgegriffen um Infrastruktur für die Software-Entwicklung zu realisieren
+%     \item daher menge verscheidedner Schnittstellen
+%     \item mit Terraform aber nicht
+%     \item statt individueller schnittstellensprache konfiguration über json oder HashiCorp Configurration Language (HCL)
+%     \item hcl erlaubt kommentare und weitere features gegenüber json
+    
+%     \item Zusammenarbeit mit allen wichtigen Software und Hardware-Providern
+    
+%     \item häufige Anwendungsfälle für Terraform:
+%     \item Infrastructure as Code
+%     \item Multi-cloud deployment
+%     \item Manage Kubernetes
+%     \item Netzwerkinfrastruktur verwalten
+%     \item Images von virtuellen Maschinen verwalten
+%     \item Integration mit anderen HashiCorp Plattformen wie Vault
+    
+%     \item cite https://www.ionos.de/digitalguide/server/tools/was-ist-terraform/
+%     \item cite https://www.terraform.io/
+% \end{itemize}
 
 \section{Hyperscalers}
 \subsection{AWS}
@@ -64,6 +114,7 @@ Further, benefits of Cobra are, among others, the automated generation of autoco
 \section{Jenkins}
 
 \section{Kubernetes}
+\label{sec:kubernetes}
 Kubernetes (often short: k8s) is an open source solution to ease up and automate management of container based services.
 While doing so\todo{this sounds ugly}, it follows a declarative paradigm.
 This means that the users just needs to describe the desired state -- for example through the use of configuration files or via the Kubernetes \ac{cli} -- and Kubernetes determines the steps by itself which are necessary to reach and maintain this state.
@@ -80,7 +131,8 @@ The user actually never interacts with the nodes themselves directly.
 \cite{k8skonzepte}
 
 \section{Vault}
-Vault is a service with the primary task to provide a central control unit to manage and organize enterprise secrets.
+\label{sec:vault}
+Vault is an open source service with the primary task to provide a central control unit to manage and organize enterprise secrets.
 It encrypts secrets both at rest and in transit.
 Access to the secrets can be granted granular per user through the use of \acp{acl}.
 Furthermore, vault audits access to the secrets.
