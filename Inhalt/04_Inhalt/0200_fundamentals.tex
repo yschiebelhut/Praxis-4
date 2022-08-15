@@ -124,13 +124,21 @@ The user actually never interacts with the nodes themselves directly.
 \cite{k8skonzepte}
 
 \section{Gardener}
+Even though there are tools that help with creating and updating single Kubernetes clusters, it is rather hard to manage many clusters.
+This is where Gardener comes into play.
+It is a Kubernetes native extension that manages Kubernetes clusters as a service, packing the performance to manage up to thousands of clusters.
+One key concept that is applied is so called self-hosting.
+This means that Kubernetes components are run inside of Kubernetes clusters.
+
+
 % \begin{itemize}
 %     \item open source software by SAP
 %     \item for managing Kubernetes cluster (Kubernetes as a service)
 %     \item Kubernetes native extension
     
 %     \item cite https://kubernetes.io/blog/2018/05/17/gardener/
-%     \item there are tool to help in creating and updating single Kubernetes clusters
+%     \item Even though there are tools that help with creating and updating single Kubernetes clusters, it is rather hard to manage many clusters.
+%     \item there are tools to help in creating and updating single Kubernetes clusters
 %     \item but very hard to manage many clusters
 %     \item this is the focus of Gardener
 %     \item manages Kubernetes clusters as a service
