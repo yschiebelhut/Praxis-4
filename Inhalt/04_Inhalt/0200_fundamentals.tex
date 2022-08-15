@@ -118,6 +118,7 @@ Furthermore, Kubernetes can perform load balancing and redundancy between differ
 
 One instance of a Kubernetes system is called a cluster.
 A Cluster is composed of multiple nodes (which usually are virtual machines or physical servers) which run the actual applications.
+An Application runs inside some kind of container, internally called Pod.
 The interaction with a cluster is managed by the so-called \emph{Kubernetes Master}.
 It is a central controlling unit.
 The user actually never interacts with the nodes themselves directly.
@@ -128,8 +129,25 @@ Even though there are tools that help with creating and updating single Kubernet
 This is where Gardener comes into play.
 It is a Kubernetes native extension that manages Kubernetes clusters as a service, packing the performance to manage up to thousands of clusters.
 One key concept that is applied is so called self-hosting.
-This means that Kubernetes components are run inside of Kubernetes clusters.
+This means that Kubernetes components are run inside of Kubernetes clusters and is done, because Kubernetes is the go-to way to easily manage software in the cloud. \cite{gardener.architecture, gardener.blog1, gardener.blog2, gardener.cloud}
 
+Gardener's architecture is constructed much like Kubernetes itself although not individual Pods are managed but entire clusters.
+The root of all is the so-called \emph{Garden Cluster}.
+It is the main interface for the Gardener administrator and hosts, among others, the Garden Cluster control plane, the Gardener dashboard, the Gardener \ac{api} server, the Gardener controller manager and the Gardener scheduler.
+Then there are two other types of clusters, \emph{Seed Clusters} and \emph{Shoot Clusters}.
+One Seed Clusters manages the control planes (thus \ac{api} server, scheduler, controller manager, machine controller etc.) of its Shoot Clusters.
+There is at least one Seed Cluster per \ac{iaas} provider and region.
+The Shoot Clusters control planes are deployed as Pods inside the Seed Cluster and can therefore be created with standard Kubernetes deployment and support rolling updates.
+Shoot Clusters only contain worker nodes and are the Kubernetes Clusters that actually become available to the end-user and can be ordered in a declarative way.
+The clusters created by Gardener are vanilla Kubernetes clusters independent of the underlying cloud provider. \cite{gardener.blog2, wasistgardener}
+(More details of the described architecture can be seen in \autoref{fig:gardener-architecture}.)
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{Bilder/gardener-architecture-detailed.png}
+    \caption{Gardener architecture \cite{gardener.architecture}}
+    \label{fig:gardener-architecture}
+\end{figure}
 
 % \begin{itemize}
 %     \item open source software by SAP
@@ -249,5 +267,3 @@ This way Jenkins then can obtain this access key and use it to run the actual cl
     
 %     \item cite https://www.vaultproject.io/
 % \end{itemize}
-
-\section{Bootstrap}
