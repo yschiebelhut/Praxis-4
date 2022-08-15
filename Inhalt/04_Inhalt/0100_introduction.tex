@@ -1,1 +1,21 @@
 \chapter{Introduction}
+\section{Motivation}
+Modern enterprise infrastructure for software development often makes use of cloud computing to dynamically adapt infrastructure to the fast-paced world of agile development.
+The setup process of one so-called cluster is traditionally done by hand and can easily require multiple days of work to complete.
+Obviously, in consequence of the required man-hours, this manual deployment is rather costly and time-consuming.
+Also, humans are prune to error.
+In a manual task that big, it is very likely for unforeseeable errors to occur.
+Finding these mistakes can eventually take additional time.
+
+As a conclusion, it is desired to automate as much of a clusters' deployment process as possible.
+There are already various tools available that can be leveraged to perform an automated deployment of a declared cluster infrastructure.
+But even these automatization tools require some perquisites to run, like a technical access user with access to the necessary resources and access keys to make use of this user, which still have to be created manually or with the help of bare-bones scripts.
+The process of fulfilling these requirements is referred to as bootstrap.
+
+\section{Goal}
+Goal of this project is to simplify the bootstrap of a cluster by integrating the necessary functionality into a \ac{cli} which is currently developed by the supervising department.
+Also, the usage should be convenient and, beside providing login data for the cloud provider and credential store, minimal user input should be required to perform the bootstrap.
+Furthermore, the newly developed \ac{cli} is required to be able to get executed by an automated build server.
+The ways of user interaction have to be designed accordingly.
+
+\section{Approach}
