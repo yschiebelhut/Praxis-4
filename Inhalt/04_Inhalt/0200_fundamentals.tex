@@ -31,7 +31,7 @@ It fetches the necessary resources (usually directly from a \ac{vcs}) and saves 
 %     supports embedded assembler and c
 %     suitable for realizing abstract design patterns
 
-\section{Cobra}
+\subsection{Cobra}
 Cobra is an open source library for Go.
 Its aim is to provide developers with an easy way to create modern \ac{cli} applications.
 The cobra library is being used by noticeable projects like the \ac{cli}s for Kubernetes or for GitHub.
@@ -106,13 +106,6 @@ Terraform additionally integrates tightly with other HashiCorp services like Vau
 %     \item cite https://www.terraform.io/
 % \end{itemize}
 
-\section{Hyperscalers}
-\subsection{AWS}
-
-\section{Gardener}
-
-\section{Jenkins}
-
 \section{Kubernetes}
 \label{sec:kubernetes}
 Kubernetes (often short: k8s) is an open source solution to ease up and automate management of container based services.
@@ -129,6 +122,55 @@ The interaction with a cluster is managed by the so-called \emph{Kubernetes Mast
 It is a central controlling unit.
 The user actually never interacts with the nodes themselves directly.
 \cite{k8skonzepte}
+
+\section{Gardener}
+% \begin{itemize}
+%     \item open source software by SAP
+%     \item for managing Kubernetes cluster (Kubernetes as a service)
+%     \item Kubernetes native extension
+    
+%     \item cite https://kubernetes.io/blog/2018/05/17/gardener/
+%     \item there are tool to help in creating and updating single Kubernetes clusters
+%     \item but very hard to manage many clusters
+%     \item this is the focus of Gardener
+%     \item manages Kubernetes clusters as a service
+%     \item Gardener creates Kubernetes-conformant clusters
+%     \item supports deployment to multiple cloud providers
+%     \item brings the ability to manage thousands of clusters
+%     \item 
+% \end{itemize}
+
+\section{\ac{aws}}
+\ac{aws} is a subsidiary company of Amazon that offers a cloud computing platform with various services, such as \ac{s3} \cite{aws.s3} or \ac{eks} \cite{aws.eks}.
+Started in 2006, \ac{aws} nowadays runs data centers all over the world to provide scalable, reliable, and high performing services. \cite{aws.linkedin, whatisaws}
+
+At the time of writing, \ac{aws} is the cloud provider with the biggest market share. \cite{aws.marketshare}
+Also, most of the supervising department's clusters are currently being deployed on \ac{aws}.
+Because of these reasons and also due to constraints in time and complexity, the bootstrapping process worked out in this report is going to be narrowed down to deployment in an \ac{aws} environment.
+
+\section{Jenkins}
+Jenkins is a widely used open source automation server build with Java.
+It is a \ac{cicd} tool aiming to save time by automating repetitive tasks like building projects, running test sets and deployment.
+Jenkins supports many plugins (over 1800) via its update center which give you the ability to integrate with most of the common tools in development and automate practicably any project.
+Jenkins can also be deployed on multiple machines to spread load and ensure quick and efficient operation.
+\cite{jenkins.io, jenkins.github, gitlab.cicd}
+
+In context of this project, Jenkins will be used after the successful bootstrap to take care of running Terraform and performing the actual deployment.
+
+% \begin{itemize}
+%     \item widely used open source automation server
+%     \item built with Java
+%     \item CICD tool (Continuous Integration and Continuous Delivery)
+%     \item save time by automating repetitive tasks
+%     \item like building projects, running tests and deployment
+%     \item support for many plugins (over 1800) with its update center
+%     \item give you the ability to deploy and automate any project
+%     \item can be deployed on and spread load across multiple machines
+%     \item cite https://www.jenkins.io/
+%     \item cite https://github.com/jenkinsci/jenkins
+    
+%     \item 
+% \end{itemize}
 
 \section{Vault}
 \label{sec:vault}
@@ -160,7 +202,11 @@ The idea is, that vault concentrates on the single task to handle credentials an
 The broad variety of applications have a different focus and are not developed with the necessary expertise to guarantee safe implementation of security measures.
 Vault, on the other hand, uses implementations that are audited by the open source community as well as independent experts.
 Those are then provided as a high level \ac{api} to application developers.
-That way, the encryption process of data gets very easy while, at the same time, vault can handle the used encryption keys directly, and they are never actually sent to the application itself.
+That way, the encryption process of data gets very easy while, at the same time, vault can handle the used encryption keys directly, and they are never actually sent to the application itself. \cite{vaultproject.io}
+
+During the bootstrap, this project is about, a technical user is created for Terraform operations.
+An access key is created for this user and then saved to vault.
+This way Jenkins then can obtain this access key and use it to run the actual cluster deployment with Terraform.
 
 % \begin{itemize}
 %     \item manage and organize secrets
