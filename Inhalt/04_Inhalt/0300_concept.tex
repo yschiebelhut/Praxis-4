@@ -57,3 +57,15 @@ At the same time, you would be responsible to update a program utilizing the \ac
 As, in this case, the \ac{sdk} is released and maintained by Amazon their selves, and because of the introduced simplicity of working with an \ac{sdk} rather than the \ac{api} directly, this variant will be used in the following.
 
 \section{Vault}
+The aspects and options to consider for vault are very similar to those for \ac{aws}.
+Vault also has an \ac{http} api, a \ac{cli} and an own Go \ac{sdk}.
+One noticeable difference here is that -- even though the \ac{sdk} is provided by the vendor itself -- the documentation for the \ac{sdk} is not good at all, especially in terms of login.
+To get some login methods running, one has to dig rather deep.
+Some functionality simply is not documented at all.
+
+But the by far more important points are, that the newly created \ac{cli} by the supervising department already contains some work in progress parts that interact with Vault.
+It would not make much sense to reimplement key aspects that these solutions already cover.
+Furthermore, mixing different approaches to access Vault would be bad practice as it makes things unnecessarily complex and introduced multiple points of failure for key functionality.
+Because of this, Vault's \ac{http} \ac{api} will be used in this project.
+This can be additionally reasoned with the advantages of \ac{http} \acp{api} described in the predeceasing section with the difference, that there are not many functions of Vault that need to be accessed despite reading and writing secrets.
+The programming overhead in writing these interactions manually via the \ac{http} client is pretty small.
