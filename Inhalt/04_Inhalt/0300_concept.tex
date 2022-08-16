@@ -5,7 +5,7 @@ Both provide multiple possibilities.
 \section{\ac{aws}}
 When it comes to \ac{aws}, there are three obvious ways that could be chosen.
 
-\paragraph{REST \ac{api}}
+\paragraph{\acs{rest} \ac{api}}
 Practically all required \ac{aws} functions can be accessed via its \ac{http} \ac{api}.
 Since Go's standard library natively includes a \ac{http} client, utilizing this would be a very lightweight solution.
 You would just have to instantiate a \ac{http} client object in Go.
@@ -39,6 +39,21 @@ Also, when run locally, the Go application would have to rely on an existing ins
 Just running the Go application executable would not be sufficient to perform the bootstrap.
 Because of these reasons, embedding the \ac{aws} \ac{cli} into the newly created Go \ac{cli} coordinating the bootstrap should be seen as a solution of last resort.
 
-\paragraph{\ac{aws} Go \ac{sdk}}
+\paragraph{\ac{aws} Go \acs*{sdk}}
+The \ac{aws} \ac{sdk} is a library provided by Amazon itself to interface its \ac{aws} services.
+It is not only available for Go but for a variety of different languages.
+To make use of it, during development it can be acquired with \code{go get} and imported into the program.
+In doing so, you specifically select the needed submodules minimizing the overhead.
+Then, the \ac{sdk}'s functions can be normally used inside the Go program.
+
+One notable pain point is the partly ambiguous documentation, dependent on the part and version of the \ac{sdk}.
+For instance, while the methods for user management have well documented error codes in version 1 of the \ac{sdk}, telling you exactly what kind of errors you can expect, while version 2 -- which supposedly does a better job on error handling -- does not bother to take note on the possible error types, sometimes requiring in depth research to discover what you can expect.
+Luckily, errors are not of a big concern for this project, as near to all kinds of occurring errors just mean an unrecoverable program state and cannot explicitly be handled by the application itself.
+Furthermore, \acp{sdk} bring the inherent problem, that you completely rely on the provider in terms of update.
+If \ac{aws} changed their \ac{api} while not touching the \ac{sdk}, the program would stop working with no way to fix it rather than waiting for Amazon to update the rest of their codebase.
+On the other hand, since this is not a third party but an official \ac{sdk}, one could also see an advantage in it.
+Staying with the example of the changed \ac{api} and assuming that the \ac{sdk} gets updated at the same time as the \ac{api}, our codebase would simply continue to work.
+At the same time, you would be responsible to update a program utilizing the \acs{rest} \ac{api} entirely on your own.
+As, in this case, the \ac{sdk} is released and maintained by Amazon their selves, and because of the introduced simplicity of working with an \ac{sdk} rather than the \ac{api} directly, this variant will be used in the following.
 
 \section{Vault}
