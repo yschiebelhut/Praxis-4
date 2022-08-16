@@ -1,0 +1,44 @@
+\chapter{Conceptional Thoughts}
+Before implementing the bootstrap, one of the major questions is what way should be chosen for programmatically interacting with the services \ac{aws} and Vault.
+Both provide multiple possibilities.
+
+\section{\ac{aws}}
+When it comes to \ac{aws}, there are three obvious ways that could be chosen.
+
+\paragraph{REST \ac{api}}
+Practically all required \ac{aws} functions can be accessed via its \ac{http} \ac{api}.
+Since Go's standard library natively includes a \ac{http} client, utilizing this would be a very lightweight solution.
+You would just have to instantiate a \ac{http} client object in Go.
+This object then already has all the required functionality to send requests to the \ac{api}.
+An \ac{api} call is made through a \ac{http} request with a specific method (GET, POST, PUT, DELETE etc.) to an \ac{api} endpoint.
+This endpoint is specific to the operation you want to perform and represented by an \ac{url}.
+Additional parameters and input data for the operation can be specified in a key value style via \ac{url} parameters, the request header, or the request body.
+\ac{url} parameters can be generated with string replacement and then appended to the base \ac{url} for the \ac{aws} \ac{api}.
+The request body is a bit more complex to construct.
+It is basically a structure, that maps strings to basic data types or subordinate maps.
+This has to be constructed as a structure within Go and can then be encoded into a format supported by the \ac{http} client.
+
+Generally, using the \ac{http} \ac{api} would grant great flexibility because you construct all the requests on your own and therefore have detailed control over what happens without any additional layer of abstraction.
+On the other hand, since multiple different \ac{api} calls are required, every single one of the needed calls would have to be manually constructed.
+This is a lot of work, prune to errors that are hard to debug, and has a bad influence on the readability of the code in general because the \ac{api} calls would get prevalent to the actual program logic.
+
+\paragraph{\ac{aws} \ac{cli}}
+The \ac{aws} \ac{cli} provides a very easy and intuitive interface to the user for interacting with \ac{aws}.
+Theoretically, it is intended to be explicitly installed on a system and to be used by a human user rather than programmatically.
+Anyway, Go natively provides the functionality to execute commands on system level.
+By this mean, also the \ac{aws} \ac{cli} could be used in the program.
+
+But using the \ac{cli} would imply multiple drawbacks.
+\acp{cli} often do not have a stable human interface and therefore the output returned by the \ac{cli} is subject to change.
+This is no good if the program has to parse the output and behave according to the results because the program could break easily and unnoticed just by updating the \ac{cli}.
+Although, in the special case of the \ac{aws} \ac{cli} the user can choose between several output formats including \ac{json} notation, so a changing interface probably would not be of a problem.
+What is more of a concern is the fact that the \ac{cli} containing the bootstrap should be part of a container image packing various tools to work with clusters.
+The \ac{aws} \ac{cli} is entirely written in Python.
+If the \ac{aws} \ac{cli} should be used, Python would have to be installed into this container as well noticeably increasing the resulting image size.
+Also, when run locally, the Go application would have to rely on an existing installation of the \ac{aws} \ac{cli} to function correctly or check for its existence and prompt the user to satisfy the dependency manually in case it is missing.
+Just running the Go application executable would not be sufficient to perform the bootstrap.
+Because of these reasons, embedding the \ac{aws} \ac{cli} into the newly created Go \ac{cli} coordinating the bootstrap should be seen as a solution of last resort.
+
+\paragraph{\ac{aws} Go \ac{sdk}}
+
+\section{Vault}
