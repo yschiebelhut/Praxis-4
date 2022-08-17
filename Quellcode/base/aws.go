@@ -27,16 +27,20 @@ var (
 )
 
 type Aws struct {
-	cfg                                                         awsutil.Config
-	s3                                                          *s3.Client
-	iam                                                         *iam.Client
-	sts                                                         *sts.Client
-	callerAccountID, policyArn                                  string
-	clusterFullName, clusterName                                string
-	terraformUsername, terraformPolicyName, terraformBucketName string
+	cfg                 awsutil.Config
+	s3                  *s3.Client
+	iam                 *iam.Client
+	sts                 *sts.Client
+	callerAccountID     string
+	policyArn           string
+	clusterName         string
+	clusterFullName     string
+	terraformUsername   string
+	terraformPolicyName string
+	terraformBucketName string
 }
 
-func New(clusterRegion, clusterName, clusterType string) (*Aws, error) {
+func New(clusterRegion, clusterName string) (*Aws, error) {
 	aws := new(Aws)
 
 	cfg, err := config.LoadDefaultConfig(context.TODO())
@@ -48,7 +52,7 @@ func New(clusterRegion, clusterName, clusterType string) (*Aws, error) {
 
 	aws.cfg.Region = clusterRegion
 	aws.clusterName = clusterName
-	aws.clusterFullName = "aws." + clusterRegion + "." + clusterName
+	aws.clusterFullName = fmt.Sprintf("aws.%v.%v", clusterRegion, clusterName)
 
 	aws.terraformUsername = fmt.Sprintf("tf-%v--bot", aws.clusterFullName)
 	aws.terraformPolicyName = fmt.Sprintf("%v", aws.clusterFullName)
@@ -72,42 +76,36 @@ func New(clusterRegion, clusterName, clusterType string) (*Aws, error) {
 }
 
 func (aws Aws) CreateTerraformStateBucket() error {
-	log.Sugar.Debugf("Testing if Bucket %v already exists...\n", aws.terraformBucketName)
 	_, err := aws.s3.HeadBucket(context.TODO(), &s3.HeadBucketInput{
 		Bucket: &aws.terraformBucketName,
 	})
 
 	if err != nil {
-		if strings.Contains(err.Error(), "StatusCode: 404") {
-			log.Sugar.Debugf("Bucket %v does not exist.\n", aws.terraformBucketName)
-			log.Sugar.Debugf("Creating bucket %v.\n", aws.terraformBucketName)
+		var apiErr smithy.APIError
+		if errors.As(err, &apiErr) {
+			switch apiErr.(type) {
+			case *s3types.NotFound:
+				if aws.cfg.Region == "us-east-1" {
+					_, err = aws.s3.CreateBucket(context.TODO(), &s3.CreateBucketInput{
+						Bucket: &aws.terraformBucketName,
+					})
+				} else {
+					_, err = aws.s3.CreateBucket(context.TODO(), &s3.CreateBucketInput{
+						Bucket: &aws.terraformBucketName,
+						CreateBucketConfiguration: &s3types.CreateBucketConfiguration{
+							LocationConstraint: s3types.BucketLocationConstraint( aws.cfg.Region),
+						},
+					})
+				}
 
-			// specify location constraint only if region is not us-east-1
-			if aws.cfg.Region == "us-east-1" {
-				_, err = aws.s3.CreateBucket(context.TODO(), &s3.CreateBucketInput{
-					Bucket: &aws.terraformBucketName,
-				})
-			} else {
-				_, err = aws.s3.CreateBucket(context.TODO(), &s3.CreateBucketInput{
-					Bucket: &aws.terraformBucketName,
-					CreateBucketConfiguration: &types.CreateBucketConfiguration{
-						LocationConstraint: types.BucketLocationConstraint(aws.cfg.Region),
-					},
-				})
+				if err != nil {
+					return err
+				}
+
+				return nil
 			}
-
-			if err != nil {
-				log.Sugar.Errorf("Error while creating bucket %v! Error: %v\n", aws.terraformBucketName, err.Error())
-				return err
-			}
-
-			log.Sugar.Debugf("Bucket %v created successfully.\n", aws.terraformBucketName)
-		} else {
-			log.Sugar.Errorf("Error when checking for existance of bucket %v! Error: %v\n", aws.terraformBucketName, err.Error())
-			return err
 		}
-	} else {
-		log.Sugar.Debug("Bucket %v already exists. Proceeding with next step.\n", aws.terraformBucketName)
+		return err
 	}
 	return nil
 }

@@ -1,6 +1,95 @@
 \chapter{Implementation}
+As the supervising department already works on the \ac{cli} in which the bootstrap shall be included, the following implementation will take part inside an existing Go project.
+
+As the entire source code is rather extensive, only excerpts will be shown here.
+The entire source code is provided in the appendix.
+
 \section{General Functionality}
+Go programs are structured into packages that logically separate different aspects and functionalities.
+Most of the development in this section is directly connected to interfacing with \ac{aws} and will therefore take place inside the newly created \code{aws} package.
+
 \subsection{AWS Client Struct}
+A struct in Go is basically a collection of named values that forms a new type.
+This is used to group data together and can be somewhat compared to objects in other programming languages.
+Functions can be bounded to a struct type, forming methods that can perform operations on the contained data.
+
+This principle will be used to build a custom \ac{aws} struct for performing the bootstrap.
+The result can be seen in \autoref{code:aws-struct-1}.
+On the one hand, the struct stores a general configuration and access clients to the needed \ac{aws} services (lines 2-5).
+The configuration, for example, contains the information on which global region you want to operate (like \code{us-east-1} or \code{eu-central-1}).
+The access clients are for \ac{s3}, \ac{iam}, and \ac{sts}.
+The types of these fields are defined by their respective \ac{sdk} packages.
+The following variables are strings needed multiple times across the different operations.
+
+\lstinputlisting[
+    language = Golang,
+    firstline = 29,
+    lastline = 41,
+    caption = \ac{aws} struct (excerpt from aws.go),
+    label = code:aws-struct-1
+]{Quellcode/base/aws.go}
+
+All the variables are not meant to be set by hand but through a constructor.
+The constructor (\autoref{code:aws-constructor-1}) takes the desired region and cluster name as input parameters and ensures that the other values get set properly.
+First, a configuration is loaded from default values (lines 4-9).
+In this step, also the aforementioned credentials gets loaded into the configuration.
+The constructor also packs the ability to return error.
+For instance, errors could occur when loading the configuration (line 4).
+If this is the case, \code{err} would be something different from \code{nil} (line 5), the error gets logged (line 6) and returned alongside a nil value for the \ac{aws} struct (line 7) because obviously successful generation failed.
+After loading the configuration, the region is set and the other names are generated based on the given cluster name and region (lines 11-17).
+In lines 19-21, new clients are constructed for \ac{s3}, \ac{iam}, \ac{sts} and persisted in the struct.
+
+The \ac{aws} account ID is for instance required to generate \acp{arn}.
+In this project, \acp{arn} are needed to access policies.
+Therefore, the account ID needs to be obtained.
+The \ac{sdk}'s \ac{sts} client has a method to get details on the identity of the calling user and returns a struct which also contains the account ID.
+First, the identity struct is loaded (lines 24-28) then the ID is extracted and saved to the \ac{aws} struct.
+As the \ac{arn} of a resource can be clearly calculated with the account ID, the resource type, and the resource name, the \ac{arn} for the policy can already be calculated and saved to the struct (line 30).
+The constructor then returns the finished struct.
+
+\lstinputlisting[
+    language=Golang,
+    firstline = 43,
+    lastline = 76,
+    caption = Constructor for the \ac{aws} Struct (excerpt from aws.go),
+    label = code:aws-constructor-1
+]{Quellcode/base/aws.go}
+
+\subsection{Checking \ac{aws} State and Creating Objects}
+The aim of this bootstrap is, that all necessary objects, users, and access rights exist in \ac{aws}.
+Although, it is unclear, which of these might already exist.
+So for each of those entities, one has to check whether they exist and create them if they do not.
+As the process for each of these is quite similar, it would go beyond the constraints of this report to explain each of the steps in detail.
+Instead, this process will be explained by the means of creating the \ac{s3} storage bucket for Terraform.
+
+As briefly outlined above, the first action must be to check whether the bucket already exists as the bucket should not be overwritten if it already existed.
+This is done with the \ac{sdk} method \code{HeadBucket} (lines 2-3) which receives the desired bucket name as input.
+The method call returns an output and an error.
+For checking bucket existence, only the error is relevant and saved to the variable \code{err}.
+The output can be discarded and therefore only an underscore is written instead of a variable name.
+
+The \ac{sdk} wraps all service errors as \emph{\ac{api} errors}.
+To check, if and what error occurred, the error is interpreted as \code{smithy.APIError} (lines 6-8).
+After this, it can be checked against the error types defined by the \ac{s3} \ac{sdk} package (line 9).
+The relevant error type is \code{NotFound}.
+If this error is on hand, the bucket does not exist and has to be created (lines 11-22).
+
+Creating an \ac{s3} bucket via the \ac{sdk} is pretty simple but has a little trick to it.
+The default \ac{aws} location to create buckets in is \emph{us-east-1}.
+If and only if a bucket shall be created in a different location, one has to specify a so called \emph{LocationConstraint}.
+Because of this, the configured region is checked to select the correct \ac{sdk} method call accordingly.
+If creating the bucket is free of errors, the method returns nil at this point, otherwise the creation error is returned (lines 24-28).
+If no error occurred in the first place, then this means a successful call of the \emph{HeadBucket} method and therefore it means that the specified bucket exists.
+In this case, nothing happens and the method returns nil (line 33).
+
+\lstinputlisting[
+    language=Golang,
+    firstline = 78,
+    lastline = 111,
+    caption = Creating the Terraform State Bucket (excerpt from aws.go),
+    label = code:aws-bucket-creation
+]{Quellcode/base/aws.go}
+
 \subsection{Policy Generation from File}
 \subsection{Key Rotation}
 \subsection{Updating Keys in Vault}
