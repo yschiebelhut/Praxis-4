@@ -69,3 +69,10 @@ Furthermore, mixing different approaches to access Vault would be bad practice a
 Because of this, Vault's \ac{http} \ac{api} will be used in this project.
 This can be additionally reasoned with the advantages of \ac{http} \acp{api} described in the predeceasing section with the difference, that there are not many functions of Vault that need to be accessed despite reading and writing secrets.
 The programming overhead in writing these interactions manually via the \ac{http} client is pretty small.
+
+\section{Assumptions}
+The before mentioned container image already contains scripts to manage login to \ac{aws}.
+These scripts take a \ac{saml} response and generate the file \code{\textasciitilde/.aws/credentials} out of it.
+This file contains sets of \ac{aws} credentials consisting of an access key ID, a session token and a secret key.
+These credential sets are sufficient authentication information to interface \ac{aws}.
+For the following implementation, the assumption is made, that this file already exists and contains a valid key set.
