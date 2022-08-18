@@ -1,4 +1,5 @@
 \chapter{Conceptional Thoughts}
+\label{sec:concept}
 Before implementing the bootstrap, one of the major questions is what way should be chosen for programmatically interacting with the services \ac{aws} and Vault.
 Both provide multiple possibilities.
 
@@ -57,7 +58,7 @@ At the same time, you would be responsible to update a program utilizing the \ac
 As, in this case, the \ac{sdk} is released and maintained by Amazon their selves, and because of the introduced simplicity of working with an \ac{sdk} rather than the \ac{api} directly, this variant will be used in the following.
 
 \section{Vault}
-The aspects and options to consider for vault are very similar to those for \ac{aws}.
+The aspects and options to consider for Vault are very similar to those for \ac{aws}.
 Vault also has an \ac{http} api, a \ac{cli} and an own Go \ac{sdk}.
 One noticeable difference here is that -- even though the \ac{sdk} is provided by the vendor itself -- the documentation for the \ac{sdk} is not good at all, especially in terms of login.
 To get some login methods running, one has to dig rather deep.
@@ -76,3 +77,20 @@ These scripts take a \ac{saml} response and generate the file \code{\textasciiti
 This file contains sets of \ac{aws} credentials consisting of an access key ID, a session token and a secret key.
 These credential sets are sufficient authentication information to interface \ac{aws}.
 For the following implementation, the assumption is made, that this file already exists and contains a valid key set.
+
+\section{Policy Management}
+In \ac{aws} a policy grants access to specified resources like \ac{s3} storage buckets.
+During the bootstrap, a technical service user is created for Terraform which needs the rights to access the Terraform state bucket.
+To grant these permissions, a policy is needed.
+There are different types of policy that can be chosen from, the two most noticeable ones being \emph{managed policies} and \emph{inline user policies}.
+A managed policy is an own entity that is created and can exist independently of a user or similar objects.
+To grant a user the rights that the policy grants, the policy is \emph{attached} to the user.
+An inline policy on the other hand is a property of the user it is attached to.
+In does only apply to this single user and cannot be attached to different users, groups or roles.
+
+The policy created in the bootstrap will only be used for the terraform user.
+Therefore, theoretically it would be the proper way to go to use an inline policy so that the list of other policies does not get cluttered unnecessarily.
+Although, different size limits apply to the different policy types.
+The total size of all inline policies that can be attached to a user must not exceed 2048 bytes.
+Because the cluster name is used multiple times in the policy, if you do the calculation, it becomes clear that the usage of inline policies would entail harsh length limits on the cluster name that would not be reasonable.
+Therefore, managed policies will be used even though the management has a bigger overhead.

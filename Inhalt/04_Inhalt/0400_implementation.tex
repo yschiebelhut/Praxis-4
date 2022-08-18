@@ -91,8 +91,117 @@ In this case, nothing happens and the method returns nil (line 33).
 ]{Quellcode/base/aws.go}
 
 \subsection{Policy Generation from File}
+In \autoref{sec:concept} the difference between managed and inline policies, and also why managed policies will be used, was already covered.
+To create a policy in \ac{aws} you simply use an \ac{sdk} method similar to the one used in the predeceasing section for creating the \ac{s3} bucket.
+But to do so, you need to pass a so-called \emph{policy document} to the method.
+This is basically a \ac{json} string in which the access to the desired resources is specified.
+In case of this bootstrap, the policy document will need to contain the specific names of the needed \ac{s3} buckets.
+As these names are dependent on the specified cluster name, the \ac{json} string needs to be build accordingly.
+To accomplish this, Go's standard library packs a functionality called \emph{templates}.
+A template in Go is a string containing special symbols to mark the positions in the text that shall be replaced.
+These symbols are generally indicated by double curly braces.
+The braces then contain a key indicating with what property they should be replaced.
+In the given case, just one string needs to be replaced at multiple places in the entire time.
+Therefore, only the symbol \code{\{\{.\}\}} is needed.
+The beginning of the policy file can be seen in \autoref{code:policy.tpl}.
+
+\lstinputlisting[
+    firstline = 1,
+    lastline = 9,
+    caption = Template File for the \ac{aws} Policy (excerpt),
+    label = code:policy.tpl
+]{Quellcode/base/terraform_policy.tpl}
+
+But the let alone existence of this template file is not sufficient to make use of it.
+A new method (\autoref{code:aws-policy-generation}) is written, to wrap the needed method calls of Go's template package to parse the template and build the actual policy from it.
+First, the template string is loaded, that in this case resides in a separate file.
+This gives the opportunity to change the template later on without recompiling the code.
+This saves time and effort and also, you might not even be able to recompile because the source code is only available internally.
+Files can be read in Go with the use of the \code{iotuil} package from the default library.
+When calling the \code{ReadFile} method, the path to the file has to be given as a string and a byte slice is returned (lines 2-6).
+Then, a new template can be parsed from the slice (lines 7-11).
+During the parsing process, the template package checks for syntax errors in the template file and aborts execution if errors occur.
+Finally, the policy gets \emph{executed}.
+To do so, the string that should substitute the placeholders and a bytes buffer has to be passed to the templates \code{Execute} method (lines 13-17).
+This buffer can then be converted to a string and is returned by the method (line 18).
+The returned result is now ready to be used as a policy document.
+
+\lstinputlisting[
+    language=Golang,
+    firstline = 164,
+    lastline = 182,
+    caption = Method for Policy Generation (excerpt from aws.go),
+    label = code:aws-policy-generation
+]{Quellcode/base/aws.go}
+
+
 \subsection{Key Rotation}
+Another important aspect in cloud computing, especially in the matter of long-term maintenance, is access key management.
+Of course, it is very important to use secure keys and keep them secret.
+But frequently renewal of keys may not be neglected.
+That way, even if an attacker gains access to a key, this will not be a problem for long.
+Although, this may sound simple, it has to be taken care that no legitimate user gets locked out of the systems during this process.
+\ac{aws} therefore supports the parallel management of two access keys.
+That way, you can delete and renew a key while, in the meantime, having undisturbed access to the system with the other key.
+This process is called \emph{key rotation}.
+
+The bootstrapping procedure shall perform a key rotation if keys already exist for the technical user and a key exceeds a maximum age of seven days.
+The age of a key can be determined by its metadata.
+\autoref{code:aws-key-rotation} shows how the check is performed on whether a new key has to be created or not.
+The method takes a slice of access keys to check as parameter and returns a boolean that indicates if a new key has to be created in the following (line 1).
+Since an \ac{aws} user can have anything between none and two access keys, there are three different cases to be distinguished.
+The first and most basic case is when no access keys exist for a user.
+In this case the length of the input slice is zero and a new key has to be created (lines 2-5).
+
+If the Terraform user has exactly one access key, there are two possibilities.
+Either the key is younger than seven days and nothing happens or the key exceeds the maximum age of seven days and a new key has to be created (lines 7-14).
+The key is not deleted in this case because if this would be the very key that is currently being used for automated access through Jenkins, this would block the service out.
+Instead, deleting the old key will happen the next time the bootstrapping procedure is executed.
+This way, there is no danger of accidentally blocking the access of a service.
+
+If two keys exist, the older one of the two has to be determined first.
+Since it is known that there never ever will be more than two keys and the cases for zero keys and one key is already handled, it can safely be assumed that the first and second index of the input slice contains valid access keys.
+Therefore, it is very easy to determine the oldest key with a simple if statement (lines 16-19).
+After this, the procedure is very similar to the case with only one access key.
+It is checked, if the key is older than seven days (line 20).
+If this is the case, a new one has to be created (lines 29-30), although this time the old key gets deleted (lines 21-28).
+If the key is younger than these seven days, again nothing happens (lines 33-34).
+
+\lstinputlisting[
+    language=Golang,
+    firstline = 325,
+    lastline = 359,
+    caption = Key Rotation (excerpt from aws.go),
+    label = code:aws-key-rotation
+]{Quellcode/base/aws.go}
+
 \subsection{Updating Keys in Vault}
+Every time a new key gets created, it needs to be saved to Vault.
+As already mentioned in \autoref{sec:concept}, there is already an implementation of a basic Vault client by the supervising department that just needs to be extended to add the functionality to add keys to Vault.
+For this purpose, the method shown in \autoref{code:vault-update} is added to the existing Vault package.
+
+The method binds to a config struct, storing information like the vault address and the path where the secret shall be created or where it can be accessed and satisfying a Vault client interface.
+The access key to be saved is passed to the function as a parameter (line 1).
+Then, the call to the Vault \ac{api} is prepared.
+First, the endpoint \ac{url} is constructed from the Vault base address and the desired secret path (line 2).
+Then, the request body containing the new secret is prepared.
+Vault takes new secrets from the \emph{data} sections of \ac{json} bodies.
+Therefore, a new map is created and the passed access key is mapped to the key \code{data}.
+Go then provides a method, again from its default library, to convert an ambiguous map into a \ac{json} bytes slice (lines 4-6).
+Then, a new \ac{http} client is constructed (line 8).
+Also, a new \ac{http} request gets build.
+The request will be of type \code{POST}, targeted to the determined \ac{url}, and utilizing the generated \ac{json} body (line 9).
+The header of the request must contain a Vault token for authentication.
+This token is already available in the config struct and can simply be added to the request header (line 10).
+The \ac{http} client is then used to send the request (lines 11-15).
+
+\lstinputlisting[
+    language = Golang,
+    firstline = 252,
+    lastline = 267,
+    caption = Saving Keys to Vault,
+    label = code:vault-update
+]{Quellcode/vault.go}
 
 \section{Unit Tests}
 

@@ -203,35 +203,35 @@ In context of this project, Jenkins will be used after the successful bootstrap 
 Vault is an open source service with the primary task to provide a central control unit to manage and organize enterprise secrets.
 It encrypts secrets both at rest and in transit.
 Access to the secrets can be granted granular per user through the use of \acp{acl}.
-Furthermore, vault audits access to the secrets.
+Furthermore, Vault audits access to the secrets.
 That means that it keeps a detailed log on whom accessed what secret at which point in time.
-If there was a security breach, where an unauthorized person got access to vault, this protocol can be used to tell, if a specific secret has been read by the attacker or if it is still safe to use.
+If there was a security breach, where an unauthorized person got access to Vault, this protocol can be used to tell, if a specific secret has been read by the attacker or if it is still safe to use.
 
 Vault is designed to be highly pluggable.
 An instance is composed of \emph{storage backends}, \emph{audit log instances}, \emph{authentication providers} as well as \emph{secret backends}.
 Each of these can be impersonated by a variety of different components.
 This makes it possible to use different trusted authorities for attestation of identity.
 For example, among others LDAP, JWT, GitHub, and Radius can be used.
-An automated build service could very well use a different service to authenticate to vault than a human user.
+An automated build service could very well use a different service to authenticate to Vault than a human user.
 
 Secrets and encryption are often the weak spot in applications.
 If a secret gets leaked and the leak stays unnoticed, attackers could gain long term access to a system.
 As a solution, Vault offers \emph{dynamic secrets}.
 When a client requests the access credentials for a supported system, Vault creates a short-lived secret just for that specific client.
-Because the client is only accessing vault, it does not have to bother with key creation nor rotation and an increased layer of security is added by not using secrets for an extended period of time.
+Because the client is only accessing Vault, it does not have to bother with key creation nor rotation and an increased layer of security is added by not using secrets for an extended period of time.
 Also, if a dynamic secret gets leaked, this single secret can be revoked individually.
 If all clients accessing the resource used the same credentials, changing or blocking those could potentially cause an outage of the whole system.
 
 When it comes to encryption, it can happen rather quickly that a single mistake compromises the security of the whole application.
-Because of this, vault offers encryption as a service.
-The idea is, that vault concentrates on the single task to handle credentials and encryption safely.
+Because of this, Vault offers encryption as a service.
+The idea is, that Vault concentrates on the single task to handle credentials and encryption safely.
 The broad variety of applications have a different focus and are not developed with the necessary expertise to guarantee safe implementation of security measures.
 Vault, on the other hand, uses implementations that are audited by the open source community as well as independent experts.
 Those are then provided as a high level \ac{api} to application developers.
-That way, the encryption process of data gets very easy while, at the same time, vault can handle the used encryption keys directly, and they are never actually sent to the application itself. \cite{vaultproject.io}
+That way, the encryption process of data gets very easy while, at the same time, Vault can handle the used encryption keys directly, and they are never actually sent to the application itself. \cite{vaultproject.io}
 
 During the bootstrap, this project is about, a technical user is created for Terraform operations.
-An access key is created for this user and then saved to vault.
+An access key is created for this user and then saved to Vault.
 This way Jenkins then can obtain this access key and use it to run the actual cluster deployment with Terraform.
 
 % \begin{itemize}
