@@ -1,1 +1,20 @@
-\chapter{Evaluation and Future Work}
+\chapter{Future Work}
+\section{Testing the Bootstrap}
+When it comes to testing the implemented solution, it is important to distinguish the different types of tests.
+On the one hand there are \emph{unit tests} and on the other there are \emph{integration tests}.
+
+\paragraph{Unit tests} are simple tests for code, that can be run automatically.
+They are independent of other systems and can therefore deliver reproducible results just based on the actual code without having to fulfill any environmental conditions.
+
+\paragraph{Integration tests} on the other hand are way more complex than unit tests.
+Like their name suggests, they test the integration of a program with for example a service like the \ac{aws} \ac{api}.
+This means in turn, that the test is dependent on the service it is interacting with.
+For automated tests, this is a problem, because the tests would require authentication to the service and, most importantly, the tests would presume that the third party service is available and functions correctly.
+Integration tests can be done for small portions of code, but they are impractical to cover major parts of the code to be tested, and to be run, for instance, any time that code updates are pushed to a repository.
+
+The difficulty with the implementation of the bootstrap at this state is that the interaction with \ac{aws} is deeply tied into the business logic of the bootstrap.
+As a result, the bootstrap would require an integration test as a verification, although an integration test should only cover the actual interaction with \ac{aws} and not the bootstrap itself.
+To cover the business logic of the bootstrap with unit tests, the bootstrap therefore has to be decoupled from the interaction with \ac{aws}.
+The \ac{aws} part would then have to be covered with an integration test, although a much smaller one, which could focus solely on the third party service and would not get involved with the departments own business logic.
+
+% \section{Integration with the \ac{cli}}

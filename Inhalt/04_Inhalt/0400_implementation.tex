@@ -1,14 +1,22 @@
 \chapter{Implementation}
 As the supervising department already works on the \ac{cli} in which the bootstrap shall be included, the following implementation will take part inside an existing Go project.
 
-As the entire source code is rather extensive, only excerpts will be shown here.
-The entire source code is provided in the appendix.
-
-\section{General Functionality}
 Go programs are structured into packages that logically separate different aspects and functionalities.
 Most of the development in this section is directly connected to interfacing with \ac{aws} and will therefore take place inside the newly created \code{aws} package.
 
-\subsection{AWS Client Struct}
+The bootstrapping process will have to traverse the following steps in order:
+\begin{enumerate}
+    \item create an \ac{s3} bucket as a state storage for Terraform
+    \item create Terraforms technical user
+    \item create or update the access policy for the technical user
+    \item attach the access policy to the technical user
+    \item if access keys exist, check them for expiration
+    \item if keys are expired or do not exist, perform a key rotation
+    \item safe newly generated keys to Vault
+\end{enumerate}
+As this process is too long and complex to present it in all its details, excerpts will be used to exemplarily present the process of formation.
+
+\section{AWS Client Struct}
 A struct in Go is basically a collection of named values that forms a new type.
 This is used to group data together and can be somewhat compared to objects in other programming languages.
 Functions can be bounded to a struct type, forming methods that can perform operations on the contained data.
@@ -55,7 +63,7 @@ The constructor then returns the finished struct.
     label = code:aws-constructor-1
 ]{Quellcode/base/aws.go}
 
-\subsection{Checking \ac{aws} State and Creating Objects}
+\section{Checking \ac{aws} State and Creating Objects}
 The aim of this bootstrap is, that all necessary objects, users, and access rights exist in \ac{aws}.
 Although, it is unclear, which of these might already exist.
 So for each of those entities, one has to check whether they exist and create them if they do not.
@@ -90,7 +98,7 @@ In this case, nothing happens and the method returns nil (line 33).
     label = code:aws-bucket-creation
 ]{Quellcode/base/aws.go}
 
-\subsection{Policy Generation from File}
+\section{Policy Generation from File}
 In \autoref{sec:concept} the difference between managed and inline policies, and also why managed policies will be used, was already covered.
 To create a policy in \ac{aws} you simply use an \ac{sdk} method similar to the one used in the predeceasing section for creating the \ac{s3} bucket.
 But to do so, you need to pass a so-called \emph{policy document} to the method.
@@ -135,7 +143,7 @@ The returned result is now ready to be used as a policy document.
 ]{Quellcode/base/aws.go}
 
 
-\subsection{Key Rotation}
+\section{Key Rotation}
 Another important aspect in cloud computing, especially in the matter of long-term maintenance, is access key management.
 Of course, it is very important to use secure keys and keep them secret.
 But frequently renewal of keys may not be neglected.
@@ -175,7 +183,7 @@ If the key is younger than these seven days, again nothing happens (lines 33-34)
     label = code:aws-key-rotation
 ]{Quellcode/base/aws.go}
 
-\subsection{Updating Keys in Vault}
+\section{Updating Keys in Vault}
 Every time a new key gets created, it needs to be saved to Vault.
 As already mentioned in \autoref{sec:concept}, there is already an implementation of a basic Vault client by the supervising department that just needs to be extended to add the functionality to add keys to Vault.
 For this purpose, the method shown in \autoref{code:vault-update} is added to the existing Vault package.
@@ -202,7 +210,3 @@ The \ac{http} client is then used to send the request (lines 11-15).
     caption = Saving Keys to Vault,
     label = code:vault-update
 ]{Quellcode/vault.go}
-
-\section{Unit Tests}
-
-\section{Integration with the \ac{cli}}
