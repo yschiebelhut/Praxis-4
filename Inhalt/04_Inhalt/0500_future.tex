@@ -1,18 +1,21 @@
 \chapter{Future Work}
-\section{Testing the Bootstrap}
+To finish off the bootstrap, work beyond the scope of this report is required.
+Some fundamentals and considerations regarding these tasks shall be discussed here, although their realization will not be depicted.
+
+\section{Establishing Tests for the Bootstrap}
 When it comes to testing the implemented solution, it is important to distinguish different categories of tests.
 On the one hand there are \emph{unit tests} and on the other there are \emph{integration tests}.
 
 \paragraph{Unit tests} are about testing small components of code for functionality in different scenarios.
-Do to so, the test usually isolates the components from the remaining code.
+Do to so, the test often isolates the components from the remaining code.
 Dependencies on other systems are usually swapped out to create this isolation.
-(This process is called \emph{mocking}.)
+This process is called \emph{mocking}.
 In general, unit tests should not have side effects and should be completely independent of the rest of the application.
 Because of this, unit tests are very fast, simpler in structure and therefore also easier to write.
 
 \paragraph{Integration tests} on the other hand are way more complex than unit tests.
 Like their name suggests, they test the integration of a module with other modules.
-This is done when a unit test is not sufficient for some functions because of its isolation property.
+This is done when a unit test is not sufficient for testing some functions because of its isolation property.
 Integration test do not try to mitigate side effects but consider them from the beginning.
 Generally, integration tests are more complex to set up and slower than unit tests.
 Also, integration test might often rely on external resources which failures are beyond the control of the developer.
@@ -29,15 +32,24 @@ These mocked clients could then fake the interaction with \ac{aws} and deliver r
 In Go, this is generally rather easy to achieve through the use of interfaces.
 An interface in Go is just a definition of method headers.
 Any type that implements the specified methods, automatically also implements the interface.
-For making the actual clients interchangeable with mocked clients, interfaces would have to be specified, that defines all \ac{sdk} methods the clients needs.
+For making the actual clients interchangeable with mocked clients, interfaces would have to be specified, that define all \ac{sdk} methods the clients need.
 Then, new types could be constructed, that implement those methods and return the desired values for mocking.
-Now, instead of using the types of the actual \ac{sdk} clients when referring to the clients (in this case the types of the client variables in \autoref{code:aws-struct-1}), the interface would be used.
-This enables the tests to replace the clients with the mocked clients without changing the program execution, because the same methods can be called but just on a different object.
+Now, instead of using the types of the actual \ac{sdk} clients when referring to the clients (in this case the types of the client variables in \autoref{code:aws-struct-1}), the interfaces would be used.
+This enables the tests to replace the clients with the mocked clients without changing the program execution, because the same methods can be called but just on different objects.
 
 This is an easy approach if only a few methods have to be mocked.
-The problem in the context of this project is, that especially for the \ac{iam} client, many methods would have to be mocked individually, which is a lot of work and difficult to cover all special cases and possible errors.
-That is why this approach is less suitable in this case.
+The problem in the context of this project is, that especially for the \ac{iam} client, many methods would have to be mocked individually, which is a lot of work, creates a lot of overhead for creating the interface, and it is difficult to cover all special cases and possible errors.
 
 \paragraph{Function Pointers}
+In some ways, this approach is rather similar to the aforementioned one.
+In Go, functions can be stored in variables just like anything else.
+So by extracting certain functionality into individual functions, instead of creating entire mock clients, just some functions could be swapped out for other functions delivering the mocked results.
+To make use of this principle, another layer of abstraction would need to be implemented that wraps the \ac{sdk} methods into package scoped functions, and, if feasible, aggregates multiple \ac{sdk} methods into one wrapper.
+These wrappers could be referred to with function pointers.
+For unit testing, only these pointers would have to be adjusted to point to the mocked methods.
+This can happen directly in the test file as in Go the tests are located in the same package.
+The wrappers themselves could be verified for functionality with integration tests.
+
+Although this approach reduces the complexity of the actual mocking by omitting the use of interfaces and rebuilding the entire clients, as a downside it would require some restructuring to the code because the calls to the \ac{sdk} methods would have to be replaced with the function pointers.
 
 % \section{Integration with the \ac{cli}}
