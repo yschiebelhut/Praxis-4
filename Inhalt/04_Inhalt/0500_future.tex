@@ -52,4 +52,23 @@ The wrappers themselves could be verified for functionality with integration tes
 
 Although this approach reduces the complexity of the actual mocking by omitting the use of interfaces and rebuilding the entire clients, as a downside it would require some restructuring to the code because the calls to the \ac{sdk} methods would have to be replaced with the function pointers.
 
-% \section{Integration with the \ac{cli}}
+\section{Integration with the \ac{cli}}
+Eventually, when the external structure of the bootstrap package becomes final, the functionality provided by the newly created package still needs to be included into the cobra \ac{cli}.
+Thanks to the default structure of the cobra framework, this process is very simple.
+In cobra, each interaction with the application is contained in a command.
+All these commands, despite the root command which is the app itself (in this case called \code{ictl}), have exactly one parent command, origin either directly or indirectly from the root command and optionally run an action.
+Command definitions are normally located in a dedicated package.
+Adding a command is as easy as adding a struct variable of the type \code{Command} defined by the cobra package.
+The most important fields of a command are \code{Use}, which defines the name with which the command is called, and \code{Run}, which is a Go function that is run when the command is called.
+Additional input values for the action can be provided by the use of \emph{flags}.
+Those are defined in an init function of the commands package using the command's flag methods provided by the cobra framework.
+
+For this bootstrap, probably a dedicated subcommand like \code{bootstrap} should be added that is a child of the root command.
+The bootstrap would then be called by typing \code{ictl bootstrap} in the terminal.
+The run method would then internally call the functions exported by the package containing the bootstrap logic.
+Information required by the bootstrap (region and cluster name) could be realized as required flags of the bootstrap command and then passed to the bootstraps functions inside the run method.
+
+To offer the possibility to add bootstrapping processes for different cloud providers at a later point in time, the \ac{aws} bootstrap could also be implemented as a subcommand for the bootstrap command in the first place.
+The only difference in realization would be that the bootstrap functions are not called in the run method of the \code{bootstrap} command but in the run method of the child command \code{aws}.
+Eventually, performing an \ac{aws} bootstrap could look like\\
+\code{ictl bootstrap aws --name clusterName --region eu-central-1}.
