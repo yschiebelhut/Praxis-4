@@ -2,10 +2,10 @@
 \section{Go}
 Go (also known as Golang) is an open source programming language that was started at Google in 2007 and initially launched in 2009.
 The language was designed to face engineering challenges at Google with the goal to make it \enquote{easy to build simple, reliable and efficient software}. \cite{pike.2020, golang.github}
-By now, the compiled and statically typed language \cite{chris.2021} is widely used and the way it approaches network concurrency and software engineering has influenced other languages to a noticeable extent. \cite{pike.2020}
-Through its structure go supports programming on various levels of abstraction.
+By now, the compiled and statically typed language \cite{chris.2021} is widely used, and the way it approaches network concurrency and software engineering has influenced other languages to a noticeable extent. \cite{pike.2020}
+Through its structure Go supports programming on various levels of abstraction.
 For instance, one can embed Assembler or C code into a Go program or on the other hand combine groups of components into bigger, more complex components to realize abstract design patterns. \cite{Maurer2021}
-Nowadays, Go is a popular choice for everything related to DevOps and therefor also for the development of command line tools. \cite{mike.2020}
+Nowadays, Go is a popular choice for everything related to DevOps and therefore also for the development of command line tools. \cite{mike.2020}
 
 Go also tries to provide its own, official solutions for common tasks in software development.
 When installing Go, it comes packed alongside with a formatter (which shall ensure uniform styling across all programs written in Go) and an included suite for unit testing, just to name a few examples.
@@ -42,6 +42,7 @@ This action than take arguments and flags to further specify on which objects an
 With Cobra, one can also easily create nested subcommands.
 This means that a before mentioned command can also be divided into multiple sub-actions to enable detailed handling of complex actions.
 Further, benefits of Cobra are, among others, the automated generation of autocompletion for the most common shells as well as the ability to automatically create man pages. \cite{cobra.github, cobra.dev}
+The \ac{cli} that the supervising department is currently developing is build upon Cobra.
 
 
 % \begin{itemize}
@@ -77,15 +78,15 @@ Even though there are tools that help with creating and updating single Kubernet
 This is where Gardener comes into play.
 It is a Kubernetes native extension that manages Kubernetes clusters as a service, packing the performance to manage up to thousands of clusters.
 One key concept that is applied is so-called self-hosting.
-This means that Kubernetes components are run inside of Kubernetes clusters and is done, because Kubernetes is the go-to way to easily manage software in the cloud. \cite{gardener.architecture, gardener.blog1, gardener.blog2, gardener.cloud}
+This means that Kubernetes components are run inside of Kubernetes clusters, and is done because Kubernetes is the go-to way to easily manage software in the cloud. \cite{gardener.architecture, gardener.blog1, gardener.blog2, gardener.cloud}
 
 Gardener's architecture is constructed much like Kubernetes itself although not individual Pods are managed but entire clusters.
 The root of all is the so-called \emph{Garden Cluster}.
-It is the main interface for the Gardener administrator and hosts, among others, the Garden Cluster control plane, the Gardener dashboard, the Gardener \ac{api} server, the Gardener controller manager and the Gardener scheduler.
+It is the main interface for the Gardener administrator and hosts, among others, the Garden Cluster control plane, the Gardener dashboard, the Gardener \ac{api} server, the Gardener controller manager, and the Gardener scheduler.
 Then there are two other types of clusters, \emph{Seed Clusters} and \emph{Shoot Clusters}.
 One Seed Clusters manages the control planes (thus \ac{api} server, scheduler, controller manager, machine controller etc.) of its Shoot Clusters.
 There is at least one Seed Cluster per \ac{iaas} provider and region.
-The Shoot Clusters control planes are deployed as Pods inside the Seed Cluster and can therefore be created with standard Kubernetes deployment and support rolling updates.
+The Shoot Clusters control planes are deployed as Pods inside the Seed Cluster, can therefore be created with standard Kubernetes deployment and support rolling updates.
 Shoot Clusters only contain worker nodes and are the Kubernetes Clusters that actually become available to the end-user and can be ordered in a declarative way.
 The clusters created by Gardener are vanilla Kubernetes clusters independent of the underlying cloud provider. \cite{gardener.blog2, wasistgardener}
 (More details of the described architecture can be seen in \autoref{fig:gardener-architecture}.)
@@ -119,12 +120,12 @@ The clusters created by Gardener are vanilla Kubernetes clusters independent of 
 Started in 2006, \ac{aws} nowadays runs data centers all over the world to provide scalable, reliable, and high performing services. \cite{aws.linkedin, whatisaws}
 
 At the time of writing, \ac{aws} is the cloud provider with the biggest market share. \cite{aws.marketshare}
-Also, most of the supervising department's clusters are currently being deployed on \ac{aws}.
+Also, most of the supervising department's cloud service offerings are currently being deployed on \ac{aws}.
 Because of these reasons and also due to constraints in time and complexity, the bootstrapping process worked out in this report is going to be narrowed down to deployment in an \ac{aws} environment.
 
 \section{Terraform}
 Modern enterprise infrastructure for software development usually makes use of cloud computing to dynamically adapt infrastructure to the fast-paced world of agile development.
-These clusters are usually distributed between multiple cloud services, each of which uses their own individual \acp{api} to configure their platform.
+These cloud services are usually distributed between multiple infrastructure providers, each of which uses their own individual \acp{api} to configure their platform.
 Terraform is a tool that tries to minimize the effort needed to deploy these infrastructures in the long run by automating resource management as far as possible.
 It allows to uniformly describe the target infrastructure in an easy to learn, machine-readable definition language and automatically takes care of deploying this infrastructure at the individual \ac{iaas} providers.
 This approach is also known as \ac{iac}.
@@ -232,7 +233,7 @@ That way, the encryption process of data gets very easy while, at the same time,
 
 During the bootstrap, this project is about, a technical user is created for Terraform operations.
 An access key is created for this user and then saved to Vault.
-This way Jenkins then can obtain this access key and use it to run the actual cluster deployment with Terraform.
+This way Jenkins then can obtain this access key and use it to perform the actual deployment with Terraform.
 
 % \begin{itemize}
 %     \item manage and organize secrets
