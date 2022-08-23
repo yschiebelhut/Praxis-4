@@ -10,10 +10,10 @@ When it comes to \ac{aws}, there are three obvious ways that could be chosen.
 
 \paragraph{\acs{rest} \ac{api}}
 Practically all required \ac{aws} functions can be accessed via its \ac{http} \ac{api}.
-Since Go's standard library natively includes a \ac{http} client, utilizing this would be a very lightweight solution.
-You would just have to instantiate a \ac{http} client object in Go.
+Since Go's standard library natively includes an \ac{http} client, utilizing this would be a very lightweight solution.
+You would just have to instantiate an \ac{http} client object in Go.
 This object then already has all the required functionality to send requests to the \ac{api}.
-An \ac{api} call is made through a \ac{http} request with a specific method (GET, POST, PUT, DELETE etc.) to an \ac{api} endpoint.
+An \ac{api} call is made through an \ac{http} request with a specific method (GET, POST, PUT, DELETE etc.) to an \ac{api} endpoint.
 This endpoint is specific to the operation you want to perform and represented by an \ac{url}.
 Additional parameters and input data for the operation can be specified in a key value style via \ac{url} parameters, the request header, or the request body.
 \ac{url} parameters can be generated with string replacement and then appended to the base \ac{url} for the \ac{aws} \ac{api}.
@@ -61,7 +61,7 @@ As, in this case, the \ac{sdk} is released and maintained by Amazon their selves
 
 \subsection{Vault}
 The aspects and options to consider for Vault are very similar to those for \ac{aws}.
-Vault also has an \ac{http} api, a \ac{cli} and an own Go \ac{sdk}.
+Vault also has an \ac{http} \ac{api}, a \ac{cli} and an own Go \ac{sdk}.
 One noticeable difference here is that -- even though the \ac{sdk} is provided by the vendor itself -- the documentation for the \ac{sdk} is not good at all, especially in terms of login.
 To get some login methods running, one has to dig rather deep.
 Some functionality simply is not documented at all.

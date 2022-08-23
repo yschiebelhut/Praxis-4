@@ -12,7 +12,7 @@ When installing Go, it comes packed alongside with a formatter (which shall ensu
 Furthermore, Go supports generating documentation based on comments in the source code; much alike JavaDoc.
 Go features an extensive standard library which depicts a good starting point for developing your own applications.
 In case one wants to include a third party library, this can be done via the \emph{go get} command.
-It fetches the necessary resources (usually directly from a \ac{vcs}) and saves the modules as a dependency in the \emph{go.mod} file. (cite go tour and go docs)
+It fetches the necessary resources (usually directly from a \ac{vcs}) and saves the modules as a dependency in the \emph{go.mod} file. \cite{go.tour, go.docs}
 
 % \begin{itemize}
 %     \item toolchain (uniform formatter, included test suite, source code based generation of documentation)
@@ -41,7 +41,7 @@ In this approach, a command represents a certain action that the \ac{cli} can pe
 This action than take arguments and flags to further specify on which objects and in which way the command should take action.
 With Cobra, one can also easily create nested subcommands.
 This means that a before mentioned command can also be divided into multiple sub-actions to enable detailed handling of complex actions.
-Further, benefits of Cobra are, among others, the automated generation of autocomplete for the most common shells as well as the ability to automatically create man pages. \cite{cobra.github, cobra.dev}
+Further, benefits of Cobra are, among others, the automated generation of autocompletion for the most common shells as well as the ability to automatically create man pages. \cite{cobra.github, cobra.dev}
 
 
 % \begin{itemize}
@@ -58,7 +58,7 @@ Further, benefits of Cobra are, among others, the automated generation of autoco
 \label{sec:kubernetes}
 Kubernetes (often short: k8s) is an open source solution to ease up and automate management of container based services.
 It follows a declarative paradigm.
-This means that the users just needs to describe the desired state -- for example through the use of configuration files or via the Kubernetes \ac{cli} -- and Kubernetes determines the steps by itself which are necessary to reach and maintain this state.
+This means that the user just needs to describe the desired state -- for example through the use of configuration files or via the Kubernetes \ac{cli} -- and Kubernetes determines the steps by itself which are necessary to reach and maintain this state.
 Kubernetes also enables users to dynamically scale their applications and services.
 This means that the amount of resources, that are dedicated to an application, is adapted during runtime dependent, for example, on the current number of users.
 Furthermore, Kubernetes can perform load balancing and redundancy between different instances of the same service.
@@ -76,7 +76,7 @@ The user actually never interacts with the nodes themselves directly.
 Even though there are tools that help with creating and updating single Kubernetes clusters, it is rather hard to manage many clusters.
 This is where Gardener comes into play.
 It is a Kubernetes native extension that manages Kubernetes clusters as a service, packing the performance to manage up to thousands of clusters.
-One key concept that is applied is so called self-hosting.
+One key concept that is applied is so-called self-hosting.
 This means that Kubernetes components are run inside of Kubernetes clusters and is done, because Kubernetes is the go-to way to easily manage software in the cloud. \cite{gardener.architecture, gardener.blog1, gardener.blog2, gardener.cloud}
 
 Gardener's architecture is constructed much like Kubernetes itself although not individual Pods are managed but entire clusters.
@@ -115,7 +115,7 @@ The clusters created by Gardener are vanilla Kubernetes clusters independent of 
 % \end{itemize}
 
 \section{\ac{aws}}
-\ac{aws} is a subsidiary company of Amazon that offers a cloud computing platform with various services, such as \ac{s3} \cite{aws.s3} or \ac{eks} \cite{aws.eks}.
+\acf{aws} is a subsidiary company of Amazon that offers a cloud computing platform with various services, such as \ac{s3} \cite{aws.s3} or \ac{eks} \cite{aws.eks}.
 Started in 2006, \ac{aws} nowadays runs data centers all over the world to provide scalable, reliable, and high performing services. \cite{aws.linkedin, whatisaws}
 
 At the time of writing, \ac{aws} is the cloud provider with the biggest market share. \cite{aws.marketshare}
@@ -124,7 +124,7 @@ Because of these reasons and also due to constraints in time and complexity, the
 
 \section{Terraform}
 Modern enterprise infrastructure for software development usually makes use of cloud computing to dynamically adapt infrastructure to the fast-paced world of agile development.
-These clusters are usually distributed between multiple cloud services, each of which use their own individual \acp{api} to configure their platform.
+These clusters are usually distributed between multiple cloud services, each of which uses their own individual \acp{api} to configure their platform.
 Terraform is a tool that tries to minimize the effort needed to deploy these infrastructures in the long run by automating resource management as far as possible.
 It allows to uniformly describe the target infrastructure in an easy to learn, machine-readable definition language and automatically takes care of deploying this infrastructure at the individual \ac{iaas} providers.
 This approach is also known as \ac{iac}.

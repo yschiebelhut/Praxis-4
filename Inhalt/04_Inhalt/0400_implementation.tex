@@ -40,7 +40,7 @@ The following variables are strings needed multiple times across the different o
 All the variables are not meant to be set by hand but through a constructor.
 The constructor (\autoref{code:aws-constructor-1}) takes the desired region and cluster name as input parameters and ensures that the other values get set properly.
 First, a configuration is loaded from default values (lines 4-9).
-In this step, also the aforementioned credentials gets loaded into the configuration.
+In this step, also the aforementioned credentials get loaded into the configuration.
 The constructor also packs the ability to return error.
 For instance, errors could occur when loading the configuration (line 4).
 If this is the case, \code{err} would be something different from \code{nil} (line 5), the error gets logged (line 6) and returned alongside a nil value for the \ac{aws} struct (line 7) because obviously successful generation failed.
@@ -84,7 +84,7 @@ If this error is on hand, the bucket does not exist and has to be created (lines
 
 Creating an \ac{s3} bucket via the \ac{sdk} is pretty simple but has a little trick to it.
 The default \ac{aws} location to create buckets in is \emph{us-east-1}.
-If and only if a bucket shall be created in a different location, one has to specify a so called \emph{LocationConstraint}.
+If and only if a bucket shall be created in a different location, one has to specify a so-called \emph{LocationConstraint}.
 Because of this, the configured region is checked to select the correct \ac{sdk} method call accordingly.
 If creating the bucket is free of errors, the method returns nil at this point, otherwise the creation error is returned (lines 24-28).
 If no error occurred in the first place, then this means a successful call of the \emph{HeadBucket} method and therefore it means that the specified bucket exists.
@@ -188,7 +188,7 @@ Every time a new key gets created, it needs to be saved to Vault.
 As already mentioned in \autoref{sec:concept}, there is already an implementation of a basic Vault client by the supervising department that just needs to be extended to add the functionality to add keys to Vault.
 For this purpose, the method shown in \autoref{code:vault-update} is added to the existing Vault package.
 
-The method binds to a config struct, storing information like the vault address and the path where the secret shall be created or where it can be accessed and satisfying a Vault client interface.
+The method binds to a config struct that satisfies a Vault client interface, stores information like the vault address and the path where the secret shall be created or where it can be accessed.
 The access key to be saved is passed to the function as a parameter (line 1).
 Then, the call to the Vault \ac{api} is prepared.
 First, the endpoint \ac{url} is constructed from the Vault base address and the desired secret path (line 2).
