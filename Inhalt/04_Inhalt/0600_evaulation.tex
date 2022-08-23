@@ -1,1 +1,23 @@
 \chapter{Evaluation}
+In the course of this project, a working prototype of the bootstrapping process required for automated cluster deployment via Terraform was successfully implemented in an existing Go project.
+The scope was momentarily restricted to support \ac{aws} only.
+It was discussed what means should be chosen for interacting with third party services.
+The official \ac{aws} Go \ac{sdk} and the Vault \ac{http} \ac{api} were found to be the appropriate choices in the context of this project.
+Different ways of policy management for \ac{aws} were compared and classified in terms of their suitability.
+The functionality for the bootstrap was then implemented in a dedicated Go package.
+The implementation of the package reached a state where the bootstrap is functional and could technically be included in the actual \ac{cli}, although automated testing still have to be established until it can be considered final.
+Two different approaches for testing were discussed.
+Since a restructuring of the code is likely to be necessary for the realization of these tests, the solution was not yet integrated into the \ac{cli} for the time being.
+
+Even though, the solution is not yet included in the actual \ac{cli} for the most part the defined goal is met.
+As the bootstrap package does not handle user authentication on its own, no user interaction is required for performing the bootstrap despite the initial call to the \ac{cli}.
+As a consequence, the execution environment also does not matter.
+Therefore, the \ac{cli} can be used both by a physical user and also by an automated build server.
+The remaining step to reach the goal is adding the bootstrap as a \ac{cli} command which is rather easy once the actual functionality reached its final state.
+
+
+
+% Goal of this project is to simplify the bootstrap of a cluster by integrating the necessary functionality into a \acf{cli} which is currently developed by the supervising department.
+% Also, the usage should be convenient and, beside providing login data for the cloud provider and credential store, minimal user input should be required to perform the bootstrap.
+% Furthermore, the newly developed \ac{cli} is required to be able to get executed by an automated build server.
+% The ways of user interaction have to be designed accordingly.
