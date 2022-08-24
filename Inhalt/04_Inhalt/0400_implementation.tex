@@ -40,10 +40,10 @@ The following variables are strings needed multiple times across the different o
 All the variables are not meant to be set by hand but through a constructor.
 The constructor (\autoref{code:aws-constructor-1}) takes the desired region and cluster name as input parameters and ensures that the other values get set properly.
 First, a configuration is loaded from default values (lines 4-9).
-In this step, also the aforementioned credentials get loaded into the configuration.
-The constructor also packs the ability to return error.
+In this step, also the afore-mentioned credentials get loaded into the configuration.
+The constructor also packs the ability to return errors.
 For instance, errors could occur when loading the configuration (line 4).
-If this is the case, \code{err} would be something different from \code{nil} (line 5), the error gets logged (line 6) and returned alongside a nil value for the \ac{aws} struct (line 7) because obviously successful generation failed.
+If this is the case, \code{err} would be something different from \code{nil} (line 5), the error gets logged (line 6) and returned alongside a nil value for the \ac{aws} struct (line 7) because obviously a successful generation was not possible.
 After loading the configuration, the region is set and the other names are generated based on the given cluster name and region (lines 11-17).
 In lines 19-21, new clients are constructed for \ac{s3}, \ac{iam}, \ac{sts} and persisted in the struct.
 

@@ -78,13 +78,13 @@ Even though there are tools that help with creating and updating single Kubernet
 This is where Gardener comes into play.
 It is a Kubernetes native extension that manages Kubernetes clusters as a service, packing the performance to manage up to thousands of clusters.
 One key concept that is applied is so-called self-hosting.
-This means that Kubernetes components are run inside of Kubernetes clusters, and is done because Kubernetes is the go-to way to easily manage software in the cloud. \cite{gardener.architecture, gardener.blog1, gardener.blog2, gardener.cloud}
+This means that Kubernetes components are run inside of Kubernetes, and is done because Kubernetes is the go-to way to easily manage software in the cloud. \cite{gardener.architecture, gardener.blog1, gardener.blog2, gardener.cloud}
 
 Gardener's architecture is constructed much like Kubernetes itself although not individual Pods are managed but entire clusters.
 The root of all is the so-called \emph{Garden Cluster}.
-It is the main interface for the Gardener administrator and hosts, among others, the Garden Cluster control plane, the Gardener dashboard, the Gardener \ac{api} server, the Gardener controller manager, and the Gardener scheduler.
+It is the main interface for the Gardener administrator, and hosts, among others, the Garden Cluster control plane, the Gardener dashboard, the Gardener \ac{api} server, the Gardener controller manager, and the Gardener scheduler.
 Then there are two other types of clusters, \emph{Seed Clusters} and \emph{Shoot Clusters}.
-One Seed Clusters manages the control planes (thus \ac{api} server, scheduler, controller manager, machine controller etc.) of its Shoot Clusters.
+One Seed Cluster manages the control planes (thus \ac{api} server, scheduler, controller manager, machine controller etc.) of its Shoot Clusters.
 There is at least one Seed Cluster per \ac{iaas} provider and region.
 The Shoot Clusters control planes are deployed as Pods inside the Seed Cluster, can therefore be created with standard Kubernetes deployment and support rolling updates.
 Shoot Clusters only contain worker nodes and are the Kubernetes Clusters that actually become available to the end-user and can be ordered in a declarative way.
@@ -121,7 +121,7 @@ Started in 2006, \ac{aws} nowadays runs data centers all over the world to provi
 
 At the time of writing, \ac{aws} is the cloud provider with the biggest market share. \cite{aws.marketshare}
 Also, most of the supervising department's cloud service offerings are currently being deployed on \ac{aws}.
-Because of these reasons and also due to constraints in time and complexity, the bootstrapping process worked out in this report is going to be narrowed down to deployment in an \ac{aws} environment.
+Because of these reasons and also due to constraints in time and complexity, the bootstrapping process, worked out in this report, is going to be narrowed down to deployment in an \ac{aws} environment.
 
 \section{Terraform}
 Modern enterprise infrastructure for software development usually makes use of cloud computing to dynamically adapt infrastructure to the fast-paced world of agile development.
@@ -143,7 +143,7 @@ HashiCorp partners with over 160 companies and services the most noticeable ones
 \end{itemize}
 
 The most common use cases for Terraform include general \ac{iac}, managing Kubernetes (\autoref{sec:kubernetes}), multi-cloud deployment, management of network infrastructures, and management of virtual machine images.
-Terraform additionally integrates tightly with other HashiCorp services like Vault (\autoref{sec:vault}).
+Terraform is additionally tightly integrated with other HashiCorp services like Vault (\autoref{sec:vault}).
 
 % \begin{itemize}
 %     \item codifies cloud apis into declarative configuration files
@@ -177,8 +177,8 @@ Terraform additionally integrates tightly with other HashiCorp services like Vau
 
 \section{Jenkins}
 Jenkins is a widely used open source automation server build with Java.
-It is a \ac{cicd} tool aiming to save time by automating repetitive tasks like building projects, running test sets and deployment.
-Jenkins supports many plugins (over 1800) via its update center which give you the ability to integrate with most of the common tools in development and automate practicably any project.
+It is a \ac{cicd} tool aiming to save time by automating repetitive tasks like building projects, running test sets and deploying the service.
+Jenkins supports many plugins (over 1800) via its update center which introduces the ability to integrate with most of the common tools in development and automate practicably any project.
 Jenkins can also be deployed on multiple machines to spread load and ensure quick and efficient operation.
 \cite{jenkins.io, jenkins.github, gitlab.cicd}
 
@@ -213,7 +213,7 @@ An instance is composed of \emph{storage backends}, \emph{audit log instances}, 
 Each of these can be impersonated by a variety of different components.
 This makes it possible to use different trusted authorities for attestation of identity.
 For example, among others LDAP, JWT, GitHub, and Radius can be used.
-An automated build service could very well use a different service to authenticate to Vault than a human user.
+An automated build service could easily use a different service to authenticate to Vault than a human user.
 
 Secrets and encryption are often the weak spot in applications.
 If a secret gets leaked and the leak stays unnoticed, attackers could gain long term access to a system.
