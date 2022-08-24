@@ -9,15 +9,21 @@ The implementation of the package reached a state where the bootstrap is functio
 Two different approaches for testing were discussed.
 Since a restructuring of the code is likely to be necessary for the realization of these tests, the solution was not yet integrated into the \ac{cli} for the time being.
 
-Even though, the solution is not yet included in the actual \ac{cli} for the most part the defined goal is met.
+Even though the solution is not yet included in the actual \ac{cli}, for the most part, the defined goal can be considered achieved.
 As the bootstrap package does not handle user authentication on its own, no user interaction is required for performing the bootstrap despite the initial call to the \ac{cli}.
-As a consequence, the execution environment also does not matter.
-Therefore, the \ac{cli} can be used both by a physical user and also by an automated build server.
+Thus, the execution environment also does not matter.
+Therefore, the bootstrapping process will be usable both by physical users and by automated build servers.
 The remaining step to reach the goal is adding the bootstrap as a \ac{cli} command which is rather easy once the actual functionality reached its final state.
 
+Economically, the implemented solution will pay off in the future.
+The benefits in terms of time and cost of automating a manual task, consisting of multiple steps, are clear -- especially if this task is executed many times.
+The bootstrap itself is part of a much larger deployment process.
+In complex processes, the sum of individual improvements quickly adds up.
+Also, by not relying on external scripts to automatically perform the bootstrap but integrating the functionality directly into the very \ac{cli} that is used for other tasks related to SAP's cloud service offerings, the footprint of necessary tools is reduced.
 
 
-% Goal of this project is to simplify the bootstrap of a cluster by integrating the necessary functionality into a \acf{cli} which is currently developed by the supervising department.
+
+% Goal of this project is to simplify the bootstrap by integrating the necessary functionality into a \acf{cli} which is currently developed by the supervising department.
 % Also, the usage should be convenient and, beside providing login data for the cloud provider and credential store, minimal user input should be required to perform the bootstrap.
 % Furthermore, the newly developed \ac{cli} is required to be able to get executed by an automated build server.
 % The ways of user interaction have to be designed accordingly.
