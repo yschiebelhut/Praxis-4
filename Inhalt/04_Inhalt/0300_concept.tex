@@ -40,7 +40,7 @@ The \ac{aws} \ac{cli} is entirely written in Python.
 If the \ac{aws} \ac{cli} should be used, Python would have to be installed into this container as well, noticeably increasing the resulting image size.
 Also, when run locally, the Go application would have to rely on an existing installation of the \ac{aws} \ac{cli} to function correctly or check for its existence and prompt the user to satisfy the dependency manually in case it is missing.
 Just running the Go application executable would not be sufficient to perform the bootstrap.
-Because of these reasons, embedding the \ac{aws} \ac{cli} into the newly created Go \ac{cli} coordinating the bootstrap should be seen as a solution of last resort.
+Because of these reasons, embedding the \ac{aws} \ac{cli} into the newly created Go \ac{cli}, coordinating the bootstrap, should be seen as a solution of last resort.
 
 \paragraph{\ac{aws} Go \acs*{sdk}}
 The \ac{aws} \ac{sdk} is a library provided by Amazon itself to interface its \ac{aws} services.
@@ -52,6 +52,7 @@ Then, the \ac{sdk}'s functions can be normally used inside the Go program.
 One notable pain point is the partly ambiguous documentation, dependent on the part and version of the \ac{sdk}.
 For instance, while the methods for user management have well documented error codes in version 1 of the \ac{sdk}, telling the developer exactly what kind of errors can be expected, while version 2 -- which supposedly does a better job on error handling -- does not bother to take note on the possible error types, sometimes requiring in depth research to discover what can be expected.
 Luckily, errors are not of a big concern for this project, as near to all kinds of occurring errors just mean an unrecoverable program state and cannot explicitly be handled by the application itself.
+
 Furthermore, \acp{sdk} bring the inherent problem, that one has to completely rely on the provider in terms of update.
 If \ac{aws} changed their \ac{api} while not touching the \ac{sdk}, the program would stop working with no way to fix it rather than waiting for Amazon to update the rest of their codebase.
 On the other hand, since this is not a third party but an official \ac{sdk}, one could also see an advantage in it.
@@ -67,7 +68,7 @@ To get some login methods running, one has to dig rather deep.
 Some functionality simply is not documented at all.
 
 
-But the by far more important points are, that the newly created \ac{cli} by the supervising department already contains some work in progress parts that interact with Vault.
+But the by far most important point is, that the newly created \ac{cli} by the supervising department already contains some work in progress parts that interact with Vault.
 It would not make much sense to reimplement key aspects that these solutions already cover.
 Furthermore, mixing different approaches to access Vault would be bad practice as it makes things unnecessarily complex and introduce multiple points of failure for key functionality.
 Because of this, Vault's \ac{http} \ac{api} will be used in this project.
@@ -82,18 +83,18 @@ These credential sets are sufficient authentication information to interface \ac
 For the following implementation, the assumption is made, that this file already exists and contains a valid key set.
 
 \section{Policy Management}
-In \ac{aws} a policy grants access to specified resources like \ac{s3} storage buckets.
+In \ac{aws}, a policy grants access to specified resources like \ac{s3} storage buckets.
 During the bootstrap, a technical service user is created for Terraform which needs the rights to access the Terraform state bucket.
 To grant these permissions, a policy is needed.
-There are different types of policy that can be chosen from, the two most noticeable ones being \emph{managed policies} and \emph{inline user policies}.
+There are different types of policies that can be chosen from, the two most noticeable ones being \emph{managed policies} and \emph{inline user policies}.
 A managed policy is an own entity that is created and can exist independently of a user or similar objects.
 To grant a user the rights that the policy grants, the policy is \emph{attached} to the user.
 An inline policy on the other hand is a property of the user it is attached to.
 In does only apply to this single user and cannot be attached to different users, groups or roles.
 
-The policy created in the bootstrap will only be used for the terraform user.
+The policy created in the bootstrap will only be used for the Terraform user.
 Therefore, theoretically it would be the proper way to go to use an inline policy so that the list of other policies does not get cluttered unnecessarily.
 Although, different size limits apply to the different policy types.
 The total size of all inline policies that can be attached to a user must not exceed 2048 bytes.
 Because the service offering's name is used multiple times in the policy, if the calculation is done, it becomes clear that the usage of inline policies would entail harsh length limits on the service name that would not be reasonable.
-Therefore, managed policies will be used even though the management has a bigger overhead.
+Therefore, managed policies will be used even though their management has a bigger overhead.

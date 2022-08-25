@@ -1,5 +1,5 @@
 \chapter{Implementation}
-As the supervising department already works on the \ac{cli} in which the bootstrap shall be included, the following implementation will take part inside an existing Go project.
+As the supervising department already works on the \ac{cli}, in which the bootstrap shall be included, the following implementation will take part inside an existing Go project.
 
 Go programs are structured into packages that logically separate different aspects and functionalities.
 Most of the development in this section is directly connected to interfacing with \ac{aws} and will therefore take place inside the newly created \code{aws} package.
@@ -7,7 +7,7 @@ Most of the development in this section is directly connected to interfacing wit
 The bootstrapping process will have to traverse the following steps in order:
 \begin{enumerate}
     \item create an \ac{s3} bucket as a state storage for Terraform
-    \item create Terraforms technical user
+    \item create Terraform's technical user
     \item create or update the access policy for the technical user
     \item attach the access policy to the technical user
     \item if access keys exist, check them for expiration
@@ -23,7 +23,7 @@ Functions can be bounded to a struct type, forming methods that can perform oper
 
 This principle will be used to build a custom \ac{aws} struct for performing the bootstrap.
 The result can be seen in \autoref{code:aws-struct-1}.
-On the one hand, the struct stores a general configuration and access clients to the needed \ac{aws} services (lines 2-5).
+The struct stores a general configuration and access clients to the needed \ac{aws} services (lines 2-5).
 The configuration, for example, contains the information on which global region the operation should be performed (like \code{us-east-1} or \code{eu-central-1}).
 The access clients are for \ac{s3}, \ac{iam}, and \ac{sts}.
 The types of these fields are defined by their respective \ac{sdk} packages.
@@ -188,7 +188,7 @@ Every time a new key gets created, it needs to be saved to Vault.
 As already mentioned in \autoref{sec:concept}, there is already an implementation of a basic Vault client by the supervising department that just needs to be extended to add the functionality to add keys to Vault.
 For this purpose, the method shown in \autoref{code:vault-update} is added to the existing Vault package.
 
-The method binds to a config struct that satisfies a Vault client interface, stores information like the vault address and the path where the secret shall be created or where it can be accessed.
+The method binds to a config struct that satisfies a Vault client interface, which stores information like the Vault address and the path where the secret shall be created or where it can be accessed.
 The access key to be saved is passed to the function as a parameter (line 1).
 Then, the call to the Vault \ac{api} is prepared.
 First, the endpoint \ac{url} is constructed from the Vault base address and the desired secret path (line 2).

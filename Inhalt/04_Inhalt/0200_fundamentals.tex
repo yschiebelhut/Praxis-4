@@ -41,7 +41,7 @@ In this approach, a command represents a certain action that the \ac{cli} can pe
 This action than take arguments and flags to further specify on which objects and in which way the command should take action.
 With Cobra, one can also easily create nested subcommands.
 This means that a before mentioned command can also be divided into multiple sub-actions to enable detailed handling of complex actions.
-Further, benefits of Cobra are, among others, the automated generation of autocompletion for the most common shells as well as the ability to automatically create man pages. \cite{cobra.github, cobra.dev}
+Further benefits of Cobra are, among others, the automated generation of autocompletion for the most common shells as well as the ability to automatically create man pages. \cite{cobra.github, cobra.dev}
 The \ac{cli} that the supervising department is currently developing is build upon Cobra.
 
 
@@ -177,12 +177,12 @@ Terraform is additionally tightly integrated with other HashiCorp services like 
 
 \section{Jenkins}
 Jenkins is a widely used open source automation server build with Java.
-It is a \ac{cicd} tool aiming to save time by automating repetitive tasks like building projects, running test sets and deploying the service.
+It is a \ac{cicd} tool aiming to save time by automating repetitive tasks like building projects, running test sets and deploying production ready services.
 Jenkins supports many plugins (over 1800) via its update center which introduces the ability to integrate with most of the common tools in development and automate practicably any project.
 Jenkins can also be deployed on multiple machines to spread load and ensure quick and efficient operation.
 \cite{jenkins.io, jenkins.github, gitlab.cicd}
 
-In context of this project, Jenkins will be used after the successful bootstrap to take care of running Terraform and performing the actual deployment.
+In context of this project, Jenkins is used after the successful bootstrap to take care of running Terraform and performing the actual deployment.
 
 % \begin{itemize}
 %     \item widely used open source automation server
@@ -213,7 +213,7 @@ An instance is composed of \emph{storage backends}, \emph{audit log instances}, 
 Each of these can be impersonated by a variety of different components.
 This makes it possible to use different trusted authorities for attestation of identity.
 For example, among others LDAP, JWT, GitHub, and Radius can be used.
-An automated build service could easily use a different service to authenticate to Vault than a human user.
+This way, an automated build service could, for example, use a different service to authenticate to Vault than a human user.
 
 Secrets and encryption are often the weak spot in applications.
 If a secret gets leaked and the leak stays unnoticed, attackers could gain long term access to a system.
