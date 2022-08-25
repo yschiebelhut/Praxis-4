@@ -14,14 +14,14 @@ Since Go's standard library natively includes an \ac{http} client, utilizing thi
 An \ac{http} client object would have to be instantiated in Go.
 This object then already has all the required functionality to send requests to the \ac{api}.
 An \ac{api} call is made through an \ac{http} request with a specific method (GET, POST, PUT, DELETE etc.) to an \ac{api} endpoint.
-This endpoint is specific to the operation, you want to perform, and represented by an \ac{url}.
+This endpoint is specific to the desired operation, and represented by an \ac{url}.
 Additional parameters and input data for the operation can be specified in a key value style via \ac{url} parameters, the request header, or the request body.
 \ac{url} parameters can be generated with string replacement and then appended to the base \ac{url} for the \ac{aws} \ac{api}.
 The request body is a bit more complex to construct.
 It is basically a structure, that maps strings to basic data types or subordinate maps.
 This has to be constructed as a structure within Go and can then be encoded into a format supported by the \ac{http} client.
 
-Generally, using the \ac{http} \ac{api} would grant great flexibility because you construct all the requests on your own and therefore have detailed control over what happens without any additional layer of abstraction.
+Generally, using the \ac{http} \ac{api} would grant great flexibility because all requests are constructed manually, allowing detailed control over what happens without any additional layer of abstraction.
 On the other hand, since multiple different \ac{api} calls are required, every single one of the needed calls would have to be manually constructed.
 This is a lot of work, prune to errors that are hard to debug, and has a bad influence on the readability of the code in general because the \ac{api} calls would get prevalent to the actual program logic.
 
@@ -46,17 +46,17 @@ Because of these reasons, embedding the \ac{aws} \ac{cli} into the newly created
 The \ac{aws} \ac{sdk} is a library provided by Amazon itself to interface its \ac{aws} services.
 It is not only available for Go but for a variety of different languages.
 To make use of it, during development it can be acquired with \code{go get} and imported into the program.
-In doing so, you specifically select the needed submodules minimizing the overhead.
+In doing so, the needed submodules are specifically selected, minimizing the overhead.
 Then, the \ac{sdk}'s functions can be normally used inside the Go program.
 
 One notable pain point is the partly ambiguous documentation, dependent on the part and version of the \ac{sdk}.
-For instance, while the methods for user management have well documented error codes in version 1 of the \ac{sdk}, telling you exactly what kind of errors you can expect, while version 2 -- which supposedly does a better job on error handling -- does not bother to take note on the possible error types, sometimes requiring in depth research to discover what you can expect.
+For instance, while the methods for user management have well documented error codes in version 1 of the \ac{sdk}, telling the developer exactly what kind of errors can be expected, while version 2 -- which supposedly does a better job on error handling -- does not bother to take note on the possible error types, sometimes requiring in depth research to discover what can be expected.
 Luckily, errors are not of a big concern for this project, as near to all kinds of occurring errors just mean an unrecoverable program state and cannot explicitly be handled by the application itself.
-Furthermore, \acp{sdk} bring the inherent problem, that you completely rely on the provider in terms of update.
+Furthermore, \acp{sdk} bring the inherent problem, that one has to completely rely on the provider in terms of update.
 If \ac{aws} changed their \ac{api} while not touching the \ac{sdk}, the program would stop working with no way to fix it rather than waiting for Amazon to update the rest of their codebase.
 On the other hand, since this is not a third party but an official \ac{sdk}, one could also see an advantage in it.
 Staying with the example of the changed \ac{api} and assuming that the \ac{sdk} gets updated at the same time as the \ac{api}, the codebase would simply continue to work.
-At the same time, you would be responsible to update a program utilizing the \acs{rest} \ac{api} entirely on your own.
+At the same time, updating a program utilizing the \acs{rest} \ac{api} would be solely the developer's responsibility.
 As, in this case, the \ac{sdk} is released and maintained by Amazon itself, and because of the introduced simplicity of working with an \ac{sdk} rather than the \ac{api} directly, this variant will be used in the following.
 
 \subsection{Vault}
@@ -95,5 +95,5 @@ The policy created in the bootstrap will only be used for the terraform user.
 Therefore, theoretically it would be the proper way to go to use an inline policy so that the list of other policies does not get cluttered unnecessarily.
 Although, different size limits apply to the different policy types.
 The total size of all inline policies that can be attached to a user must not exceed 2048 bytes.
-Because the service offering's name is used multiple times in the policy, if you do the calculation, it becomes clear that the usage of inline policies would entail harsh length limits on the service name that would not be reasonable.
+Because the service offering's name is used multiple times in the policy, if the calculation is done, it becomes clear that the usage of inline policies would entail harsh length limits on the service name that would not be reasonable.
 Therefore, managed policies will be used even though the management has a bigger overhead.

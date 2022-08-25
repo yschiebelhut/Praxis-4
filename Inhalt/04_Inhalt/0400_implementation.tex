@@ -24,7 +24,7 @@ Functions can be bounded to a struct type, forming methods that can perform oper
 This principle will be used to build a custom \ac{aws} struct for performing the bootstrap.
 The result can be seen in \autoref{code:aws-struct-1}.
 On the one hand, the struct stores a general configuration and access clients to the needed \ac{aws} services (lines 2-5).
-The configuration, for example, contains the information on which global region you want to operate (like \code{us-east-1} or \code{eu-central-1}).
+The configuration, for example, contains the information on which global region the operation should be performed (like \code{us-east-1} or \code{eu-central-1}).
 The access clients are for \ac{s3}, \ac{iam}, and \ac{sts}.
 The types of these fields are defined by their respective \ac{sdk} packages.
 The following variables are strings needed multiple times across the different operations.
@@ -100,8 +100,8 @@ In this case, nothing happens and the method returns nil (line 33).
 
 \section{Policy Generation from File}
 In \autoref{sec:concept} the difference between managed and inline policies, and also why managed policies will be used, was already covered.
-To create a policy in \ac{aws} you simply use an \ac{sdk} method similar to the one used in the predeceasing section for creating the \ac{s3} bucket.
-But to do so, you need to pass a so-called \emph{policy document} to the method.
+To create a policy in \ac{aws}, an \ac{sdk} method, similar to the one applied in the predeceasing section for creating the \ac{s3} bucket, can be used.
+But to do so, a so-called \emph{policy document} needs to be passed to the method.
 This is basically a \ac{json} string in which the access to the desired resources is specified.
 In case of this bootstrap, the policy document will need to contain the specific names of the needed \ac{s3} buckets.
 As these names are dependent on the specified cluster name, the \ac{json} string needs to be build accordingly.
@@ -124,7 +124,7 @@ But the let alone existence of this template file is not sufficient to make use 
 A new method (\autoref{code:aws-policy-generation}) is written, to wrap the needed method calls of Go's template package to parse the template and build the actual policy from it.
 First, the template string is loaded, that in this case resides in a separate file.
 This gives the opportunity to change the template later on without recompiling the code.
-This saves time and effort and also, you might not even be able to recompile because the source code is only available internally.
+This saves time and effort, and also, it might not even be possible to recompile because the source code is only available internally.
 Files can be read in Go with the use of the \code{iotuil} package from the default library.
 When calling the \code{ReadFile} method, the path to the file has to be given as a string and a byte slice is returned (lines 2-6).
 Then, a new template can be parsed from the slice (lines 7-11).
@@ -150,7 +150,7 @@ But frequently renewal of keys may not be neglected.
 That way, even if an attacker gains access to a key, this will not be a problem for long.
 Although, this may sound simple, it has to be taken care that no legitimate user gets locked out of the systems during this process.
 \ac{aws} therefore supports the parallel management of two access keys.
-That way, you can delete and renew a key while, in the meantime, having undisturbed access to the system with the other key.
+That way, a key can be deleted and renewed while, in the meantime, access to the system remains undisturbed with the other key.
 This process is called \emph{key rotation}.
 
 The bootstrapping procedure shall perform a key rotation if keys already exist for the technical user and a key exceeds a maximum age of seven days.
